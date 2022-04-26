@@ -22,7 +22,7 @@ if ($method == 'POST') {
       $errors[]='invalid_email';
     }
   }
-  if (!empty($data['plainpassword'])){
+  if (!empty($data['plainpassword'])){ # 8 caractères, 1 minuscule, 1 majuscule, 1 chiffre, 1 caractère spécial minimum
     if(preg_match("/^\S*(?=\S{8,})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])(?=\S*[\W])\S*$/", $data['plainpassword']) === 0){
       $errors[]='password_not_conform';
     }
@@ -71,7 +71,7 @@ if ($method == 'POST') {
     $data['date'] = date('Y-m-d H:i:s');
     $req=$db->prepare('INSERT INTO users(email, name, telephone, photo, password, address, date) VALUES(:email, :name, :telephone, :photo, :password, :address, :date);');
     $req->execute($data);
-
+    error_log($data);
     $req = $db->prepare('SELECT * FROM users WHERE email = ?;');
     $req->execute(array($data['email']));
     $test = $req->fetch();
