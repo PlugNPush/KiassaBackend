@@ -70,8 +70,16 @@ if ($method == 'POST') {
     $data['password']=password_hash($data['plainpassword'], PASSWORD_DEFAULT);
     $data['date'] = date('Y-m-d H:i:s');
     $req=$db->prepare('INSERT INTO users(email, name, telephone, photo, password, address, date) VALUES(:email, :name, :telephone, :photo, :password, :address, :date);');
-    $req->execute($data);
-    error_log(implode($data));
+    $req->execute(array(
+      "email" => $data['email'],
+      "name" => $data['name'],
+      "telephone" => $data['telephone'],
+      "photo" => $data['photo'],
+      "password" => $data['password'],
+      "address" => $data['address'],
+      "date" => $data['date']
+    ));
+
     $req = $db->prepare('SELECT * FROM users WHERE email = ?;');
     $req->execute(array($data['email']));
     $test = $req->fetch();
