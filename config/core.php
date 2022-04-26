@@ -17,7 +17,7 @@ if($method == 'OPTIONS'){
 
 // Connect to database
 try {
-  $db = new PDO('mysql:host='.getDBHost().';dbname=kiassa', getDBUsername(), getDBPassword(), array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8mb"));
+  $db = new PDO('mysql:host='.getDBHost().';dbname=Kiassa', getDBUsername(), getDBPassword(), array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8mb"));
 } catch(Exception $e) {
 	exit ('Erreur while connecting to database: '.$e->getMessage());
 }
