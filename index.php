@@ -5,7 +5,9 @@ if ($method == 'GET') {
 
   // Return alert
 
-  $text = "Le piratage est puni par la loi."
+  $text = "Le piratage est puni par la loi.";
+
+  http_response_code(403);
 
   echo json_encode(array(
     "status" => false,
@@ -16,7 +18,9 @@ if ($method == 'GET') {
 
   // Return alert
 
-  $text = "Vous avez tenté de procéder à des modifications non autorisées. Le piratage est puni par la loi."
+  $text = "Vous avez tenté de procéder à des modifications non autorisées. Le piratage est puni par la loi.";
+
+  http_response_code(403);
 
   echo json_encode(array(
     "status" => false,
