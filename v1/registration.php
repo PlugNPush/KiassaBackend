@@ -71,7 +71,7 @@ if ($method == 'POST') {
     $data['date'] = date('Y-m-d H:i:s');
     $req=$db->prepare('INSERT INTO users(email, name, telephone, photo, password, address, date) VALUES(:email, :name, :telephone, :photo, :password, :address, :date);');
     $req->execute($data);
-    error_log($data);
+    error_log(implode($data));
     $req = $db->prepare('SELECT * FROM users WHERE email = ?;');
     $req->execute(array($data['email']));
     $test = $req->fetch();
