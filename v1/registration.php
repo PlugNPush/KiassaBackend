@@ -23,12 +23,12 @@ if ($method == 'POST') {
     }
   }
   if (!empty($data['plainpassword'])){
-    if(!preg_match("^\S*(?=\S{8,})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])(?=\S*[\W])\S*$", $data['plainpassword']))){
+    if(!preg_match("^\S*(?=\S{8,})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])(?=\S*[\W])\S*$", $data['plainpassword'])){
       $errors[]='password_not_conform';
     }
   }
   if (!empty($data['telephone'])){
-    if(!preg_match("^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$", $data['telephone']))){
+    if(!preg_match("^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$", $data['telephone'])){
       $errors[]='invalid_telephone';
     }
   }
