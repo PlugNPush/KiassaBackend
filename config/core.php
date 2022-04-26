@@ -9,11 +9,7 @@ header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Ac
 
 // Read data from request
 $method = $_SERVER["REQUEST_METHOD"];
-if($method == 'OPTIONS'){
-  exit;
-}else if($method == 'POST' || $method == 'PUT'){
-  $data = json_decode(file_get_contents('php://input'), true);
-}
+$data = json_decode(file_get_contents('php://input'), true);
 
 // Connect to database
 try {
