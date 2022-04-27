@@ -1,4 +1,5 @@
 <?php
+
 require_once '../config/core.php';
 
 if ($method == 'POST') {
@@ -80,6 +81,7 @@ if ($method == 'POST') {
       "date" => $data['date']
     ));
 
+    # connexion
     $req = $db->prepare('SELECT * FROM users WHERE email = ?;');
     $req->execute(array($data['email']));
     $test = $req->fetch();
@@ -120,3 +122,4 @@ if ($method == 'POST') {
   ));
 
 }
+?>
