@@ -45,21 +45,52 @@ if ($method == 'POST') {
 
   # check mdp correspondant à l'email avec celui existant
   $verify = password_verify($data['plainpassword'], $test['password']);
-  if ($verify)
-  {
-    http_response_code(201); # created
 
-    echo json_encode(array(
-      "status" => true,
-      "description" => array("success"),
-      "data" => $test
-    ));
-  } else {
-    http_response_code(500); # internal server error
+  if (!$test){ # mauvais email
+
+    http_response_code(404); # not found
 
     echo json_encode(array(
       "status" => false,
-      "description" => array("internal_error"),
+      "description" => array("user_not_exists"),
+      "returntosender" => $data
+    ));
+
+  } else if ($verify) { # bon email et mdp
+
+    $token = generateRandomString(255);
+    $date = date('Y-m-d H:i:s', strtotime('+1 year'));
+    # ajout du token dans la db
+    $req2=$db->prepare('INSERT INTO tokens(user, token, expiration) VALUES(:user, :token, :expiration);');
+    $req2->execute(array(
+      "user" => $test['id'],
+      "token" => $token,
+      "expiration" => $date
+    ));
+    if ($req2){
+      http_response_code(200); # ok
+
+      echo json_encode(array(
+        "status" => true,
+        "description" => array("success"),
+        "data" => $token,
+        "userdata" => $test
+      ));
+    } else {
+      http_response_code(500); # internal server error
+
+      echo json_encode(array(
+        "status" => false,
+        "description" => array("internal_error"),
+        "returntosender" => $data
+      ));
+    }
+  } else { # mauvais mdp
+    http_response_code(403); # not allowed
+
+    echo json_encode(array(
+      "status" => false,
+      "description" => array("password_missmatch"),
       "returntosender" => $data
     ));
   }

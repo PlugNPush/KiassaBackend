@@ -71,7 +71,7 @@ if ($method == 'POST') {
       "date" => $data['date']
     ));
 
-    # connexion
+    # connexion et vérification de l'enregistrement
     $req = $db->prepare('SELECT * FROM users WHERE email = ?;');
     $req->execute(array($data['email']));
     $test = $req->fetch();
@@ -102,7 +102,7 @@ if ($method == 'POST') {
 
   // Unknown method
 
-  http_response_code(400);
+  http_response_code(400); # bad request
 
   echo json_encode(array(
     "status" => false,
