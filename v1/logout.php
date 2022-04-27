@@ -10,7 +10,15 @@ if ($method == 'DELETE') {
   $errors=array();
   if (empty($data['token'])){
     $errors[]='missing_token';
+  } else {
+    $req = $db->prepare('SELECT * FROM tokens WHERE token = ?;');
+    $req->execute(array($data['token']));
+    $test = $req->fetch();
+    if (!$test){
+      $errors[]='token_not_exists';
+    }
   }
+
 
   if (!empty($errors)){
     http_response_code(412); # precondition failed
@@ -25,21 +33,17 @@ if ($method == 'DELETE') {
   }
 
   # supprimer token de la db
-  $req = $db->prepare('DELETE FROM tokens WHERE token = ?;');
-  $req->execute(array($data['token']));
 
 
-  if (!$req){ # mauvais token
+  $req2 = $db->prepare('DELETE FROM tokens WHERE token = ?;');
+  $req2->execute(array($data['token']));
 
-    http_response_code(404); # not found
+  $req3 = $db->prepare('SELECT * FROM tokens WHERE token = ?;');
+  $req3->execute(array($data['token']));
+  $test3 = $req3->fetch();
 
-    echo json_encode(array(
-      "status" => false,
-      "description" => array("token_not_exists"),
-      "returntosender" => $data
-    ));
 
-  } else { # token bien supprimé
+  if (!$test3){ # token bien supprimé
 
     http_response_code(200); # Ok
 
@@ -48,6 +52,14 @@ if ($method == 'DELETE') {
       "description" => array("success")
     ));
 
+  } else {
+    http_response_code(500); # internal server error
+
+    echo json_encode(array(
+      "status" => false,
+      "description" => array("internal_error"),
+      "returntosender" => $data
+    ));
   }
 } else {
 
