@@ -67,13 +67,14 @@ if ($method == 'POST') {
       "token" => $token,
       "expiration" => $date
     ));
+    
     if ($req2){
       http_response_code(200); # ok
 
       echo json_encode(array(
         "status" => true,
         "description" => array("success"),
-        "data" => $token,
+        "data" => array("token"=>$token,"expiration"=>$date),
         "userdata" => $test
       ));
     } else {
