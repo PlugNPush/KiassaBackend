@@ -18,6 +18,7 @@ header("Content-Type: application/json; charset=utf-8");
 // Read data from request
 $method = $_SERVER["REQUEST_METHOD"];
 $data = json_decode(file_get_contents('php://input'), true);
+$headers = json_decode(getallheaders());
 
 // Connect to database
 try {
