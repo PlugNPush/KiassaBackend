@@ -3,8 +3,8 @@
 require_once dirname(__FILE__).'/../../../config/config.php';
 require_once dirname(__FILE__).'/../../../config/kiassaconfig.php';
 
-require 'PHPMailer/PHPMailer.php';
-require 'PHPMailer/SMTP.php';
+require '../3rd_parties/PHPMailer/PHPMailer.php';
+require '../3rd_parties/PHPMailer/SMTP.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
