@@ -18,9 +18,9 @@ header("Content-Type: application/json; charset=utf-8");
 // Read data from request
 $method = $_SERVER["REQUEST_METHOD"];
 $data = json_decode(file_get_contents('php://input'), true);
-$headers = json_decode(getallheaders());
+$headers = getallheaders();
 
-// Connect to database
+// Connect to databases
 try {
   $db = new PDO('mysql:host='.getDBHost().';dbname=Kiassa', getDBUsername(), getDBPassword(), array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8mb4"));
 } catch(Exception $e) {

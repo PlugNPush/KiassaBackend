@@ -27,10 +27,9 @@ if ($method == 'DELETE') {
   # supprimer token de la db
   $req = $db->prepare('DELETE FROM tokens WHERE token = ?;');
   $req->execute(array($data['token']));
-  $test = $req->fetch();
 
 
-  if (!$test){ # mauvais token
+  if (!$req){ # mauvais token
 
     http_response_code(404); # not found
 
