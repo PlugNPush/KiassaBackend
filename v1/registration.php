@@ -21,6 +21,14 @@ if ($method == 'POST') {
   if (!empty($data['email'])){
     if(!filter_var($data['email'], FILTER_VALIDATE_EMAIL)){
       $errors[]='invalid_email';
+    } else {
+      # on vérifie si l'email existe déjà dans la db (unique)
+      $mail_fetch = $db->prepare('SELECT * FROM users WHERE email = ?;');
+      $mail_fetch->execute(array($data['email']));
+      $mail = $mail_fetch->fetch();
+      if ($mail) {
+        $errors[]='email_already_exists';
+      }
     }
   }
   if (!empty($data['plainpassword'])){ # 8 caractères, 1 minuscule, 1 majuscule, 1 chiffre, 1 caractère spécial minimum
@@ -46,24 +54,6 @@ if ($method == 'POST') {
       "status" => false,
       "description" => $errors,
       "returntosender"=>$data
-    ));
-
-    exit();
-  }
-
-  # on vérifie si l'email existe déjà dans la db (unique)
-  $mail_fetch = $db->prepare('SELECT * FROM users WHERE email = ?;');
-  $mail_fetch->execute(array($data['email']));
-  $mail = $mail_fetch->fetch();
-
-  if ($mail) {
-
-    http_response_code(409); # conflict
-
-    echo json_encode(array(
-      "status" => false,
-      "description" => array("email_already_exists"),
-      "returntosender" => $data
     ));
 
   } else {
