@@ -30,7 +30,7 @@ if ($method == 'POST') {
     '%'.$data['search'].'%',
     '%'.$data['search'].'%'
   ));
-  $test = $req->fetch();
+  $test = $req->fetchAll();
 
 
   if (!$test){ # pas de résultats
@@ -44,19 +44,6 @@ if ($method == 'POST') {
 
   } else { # résultats ok
 
-    # ajout du token dans la db
-    $req2=$db->prepare('SELECT id, name, price, description, status, photo, seller, category FROM listing WHERE name = ?;');
-    $req2->execute(array(
-      "id" => $test['id'],
-      "name" => $test['name'],
-      "price" => $test['price'],
-      "description" => $test['description'],
-      "photo" => $test['photo'],
-      "seller" => $test['seller'],
-      "category" => $test['category'],
-    ));
-
-    if ($req2){
       http_response_code(200); # ok
 
       echo json_encode(array(
@@ -64,15 +51,6 @@ if ($method == 'POST') {
         "description" => array("success"),
         "userdata" => $test
       ));
-    } else {
-      http_response_code(502); # bad gateway
-
-      echo json_encode(array(
-        "status" => false,
-        "description" => array("internal_error"),
-        "returntosender" => $data
-      ));
-    }
   }
 
 } else {
