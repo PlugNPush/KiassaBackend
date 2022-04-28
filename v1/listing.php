@@ -36,7 +36,7 @@ if ($method == 'POST') {
       $errors[]='invalid_status';
     }
     if (empty($data['status'])){ # par défaut en vente
-      $data['status']=1;
+      #$data['status']=1;
     }
     if (!empty($data['category'])){ #$data['category'] = null ou 1 catégorie à séléctionner (liste)
       $fcategory=0;
@@ -67,7 +67,7 @@ if ($method == 'POST') {
       $data['seller'] = $connected['data']['id'];
       $data['date'] = date('Y-m-d H:i:s');
       $req=$db->prepare('INSERT INTO listing(name, address, price, description, status, photo, seller, category, date) VALUES(:name, :address, :price, :description, :status, :photo, :seller, :category, :date);');
-      $req->execute(array(
+      $test=$req->execute(array(
         "name" => $data['name'],
         "address" => $data['address'],
         "price" => $data['price'],
@@ -79,7 +79,7 @@ if ($method == 'POST') {
         "date" => $data['date']
       ));
 
-      if ($req == true)
+      if ($test==true && $req->rowCount()==1)
       {
         http_response_code(201); # created
 
