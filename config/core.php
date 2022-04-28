@@ -67,7 +67,7 @@ function sendMail($to, $subject, $message){
 
       // En-têtes additionnels
       $headers[] = 'To: <' . $data['email'] . '>';
-      $headers[] = 'From: Validation Kiassa <noreply@kiassa.org>';
+      $headers[] = 'From: Validation Kiassa <no-reply@kiassa.org>';
 
       $mail = new PHPmailer();
       $mail->IsSMTP();
@@ -97,21 +97,5 @@ function sendMail($to, $subject, $message){
       // Envoi
       //$sent = mail($to, $subject, $message, implode("\r\n", $headers));
 
-      if ($sent) {
-        http_response_code(2); # success
-
-        echo json_encode(array(
-          "status" => true,
-          "description" => "mail_send",
-          "returntosender"=>$data
-        ));
-      } else {
-        http_response_code(4); # precondition failed
-
-        echo json_encode(array(
-          "status" => false,
-          "description" => "mail_fail",
-          "returntosender"=>$data
-        ));
-      }
+      return $sent;
 }

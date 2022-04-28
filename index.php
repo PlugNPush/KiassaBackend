@@ -33,8 +33,8 @@ if ($method == 'GET') {
 
   // Unknown method
 
-  http_response_code(400);
 
+  http_response_code(405); # method not allowed
   echo json_encode(array(
     "status" => false,
     "returntosender" => $data

@@ -8,38 +8,22 @@ if ($method == 'POST') {
 
   # test si les données sont vides
   $errors=array();
-  if (empty($data['email'])){
-    $errors[]='missing_email';
-  }
-  if (empty($data['plainpassword'])){
-    $errors[]='missing_password';
-  }
   if (empty($data['name'])){
     $errors[]='missing_name';
   }
+  if (empty($data['address'])){ # address du vendeur par défault
+    $data['address']='';
+  }
+  if (empty($data['seller'])){ # id du vendeur
+    $errors[]='missing_name';
+  }
   # test si les données sont valides
-  if (!empty($data['email'])){
-    if(!filter_var($data['email'], FILTER_VALIDATE_EMAIL)){
-      $errors[]='invalid_email';
-    } else {
-      # on vérifie si l'email existe déjà dans la db (unique)
-      $mail_fetch = $db->prepare('SELECT * FROM users WHERE email = ?;');
-      $mail_fetch->execute(array($data['email']));
-      $mail = $mail_fetch->fetch();
-      if ($mail) {
-        $errors[]='email_already_exists';
-      }
-    }
-  }
-  if (!empty($data['plainpassword'])){ # 8 caractères, 1 minuscule, 1 majuscule, 1 chiffre, 1 caractère spécial minimum
-    if(preg_match("/^\S*(?=\S{8,})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])(?=\S*[\W])\S*$/", $data['plainpassword']) === 0){
-      $errors[]='password_not_conform';
-    }
-  }
-  if (!empty($data['telephone'])){
-    if(preg_match("/^(?:(?:\+|00)33[\s.-]{0,3}(?:\(0\)[\s.-]{0,3})?|0)[1-9](?:(?:[\s.-]?\d{2}){4}|\d{2}(?:[\s.-]?\d{3}){2})$/", $data['telephone']) === 0){
-      $errors[]='invalid_telephone';
-    }
+  // Try to convert the string to a float
+  $floatVal = floatval($data['price']);
+  // If the parsing not succeeded or the value is equivalent to an int
+  if(!$floatVal || intval($floatVal) == $floatVal)
+  {
+      $errors[]='invalid_price';
   }
   if (!empty($data['photo'])){
     if(!filter_var($data['photo'], FILTER_VALIDATE_URL)){

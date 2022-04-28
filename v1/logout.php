@@ -21,7 +21,7 @@ if ($method == 'DELETE') {
 
 
   if (!empty($errors)){
-    http_response_code(412); # precondition failed
+    http_response_code(400); # bad request
 
     echo json_encode(array(
       "status" => false,
@@ -65,7 +65,7 @@ if ($method == 'DELETE') {
 
   // Unknown method
 
-  http_response_code(400);
+  http_response_code(405); # method not allowed
 
   echo json_encode(array(
     "status" => false,
