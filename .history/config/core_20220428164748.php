@@ -103,7 +103,7 @@ function sendMail($to, $subject, $message){
 function connected() {
 
   $token = $headers['token'];
-  if (empty($token)) {
+  if (!empty($token)) {
     return array("status" => false, "error" => "no_token");
   }
 

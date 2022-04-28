@@ -99,30 +99,3 @@ function sendMail($to, $subject, $message){
 
       return $sent;
 }
-
-function connected() {
-
-  $token = $headers['token'];
-  if (empty($token)) {
-    return array("status" => false, "error" => "no_token");
-  }
-
-  $req = $db->prepare('SELECT * FROM tokens WHERE token = ?;');
-  $req->execute(array($token));
-  $test = $req->fetch();
-
-  if ($test) {
-    $date = date('Y-m-d H:i:s');
-    if ($date < $test['expiration']) {
-      $req2 = $db->prepare('SELECT * FROM users WHERE id = ?;');
-      $req2->execute(array($test['user']));
-      $test2 = $req2->fetch();
-      return array("status" => true, "data" => $test2);
-    } else {
-      return array("status" => false, "error" => "token_expired");
-    }
-  } else {
-    return array("status" => false, "error" => "invalid_token");
-  }
-
-}

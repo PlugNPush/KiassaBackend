@@ -103,9 +103,6 @@ function sendMail($to, $subject, $message){
 function connected() {
 
   $token = $headers['token'];
-  if (empty($token)) {
-    return array("status" => false, "error" => "no_token");
-  }
 
   $req = $db->prepare('SELECT * FROM tokens WHERE token = ?;');
   $req->execute(array($token));
@@ -118,11 +115,8 @@ function connected() {
       $req2->execute(array($test['user']));
       $test2 = $req2->fetch();
       return array("status" => true, "data" => $test2);
-    } else {
-      return array("status" => false, "error" => "token_expired");
     }
-  } else {
-    return array("status" => false, "error" => "invalid_token");
+
   }
 
 }
