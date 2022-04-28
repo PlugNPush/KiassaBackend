@@ -35,7 +35,7 @@ if ($method == 'POST') {
 
   if (!$test){ # pas de résultats
 
-    http_response_code(203); # no content
+    http_response_code(204); # no content
 
     echo json_encode(array(
       "status" => false,
