@@ -36,7 +36,7 @@ if ($method == 'POST') {
       $errors[]='invalid_status';
     }
     if (empty($data['status'])){ # par défaut en vente
-      #$data['status']=1;
+      $data['status']=1;
     }
     if (!empty($data['category'])){ #$data['category'] = null ou 1 catégorie à séléctionner (liste)
       $fcategory=0;
