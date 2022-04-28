@@ -32,6 +32,9 @@ if ($method == 'POST') {
         $errors[]='invalid_photo_url';
       }
     }
+    #$data['status'] = 1 si en vente ou 0 si privé (bouton)
+    $data['seller'] = $connnected['data']['id']
+    #$data['category'] = null ou 1 catégorie à séléctionner (liste)
 
     if (!empty($errors)){
       http_response_code(400); # bad request
@@ -39,31 +42,26 @@ if ($method == 'POST') {
       echo json_encode(array(
         "status" => false,
         "description" => $errors,
-        "returntosender"=>$data
+        "returntosender" => $data
       ));
 
     } else {
 
-      $data['password']=password_hash($data['plainpassword'], PASSWORD_DEFAULT);
       $data['date'] = date('Y-m-d H:i:s');
-      $req=$db->prepare('INSERT INTO users(email, name, telephone, photo, password, address, date) VALUES(:email, :name, :telephone, :photo, :password, :address, :date);');
+      $req=$db->prepare('INSERT INTO listing(name, address, price, description, status, photo, seller, category, date) VALUES(:name, :address, :price, :description, :status, :photo, :seller, :category, :date);');
       $req->execute(array(
-        "email" => $data['email'],
         "name" => $data['name'],
-        "telephone" => $data['telephone'],
-        "photo" => $data['photo'],
-        "password" => $data['password'],
         "address" => $data['address'],
+        "price" => $data['price'],
+        "description" => $data['description'], # non obligatoire
+        "status" => $data['status'], # 0 ou 1
+        "photo" => $data['photo'], # non obligatoire
+        "seller" => $data['seller'],
+        "category" => $data['category'],
         "date" => $data['date']
       ));
 
-      # connexion et vérification de l'enregistrement
-      $req = $db->prepare('SELECT * FROM users WHERE email = ?;');
-      $req->execute(array($data['email']));
-      $test = $req->fetch();
-
-      $verify = password_verify($data['plainpassword'], $test['password']);
-      if ($verify)
+      if ($req == true)
       {
         http_response_code(201); # created
 
@@ -73,7 +71,7 @@ if ($method == 'POST') {
           "data" => $test
         ));
       } else {
-        http_response_code(500); # internal server error
+        http_response_code(502); # bad gateway
 
         echo json_encode(array(
           "status" => false,

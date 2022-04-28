@@ -53,7 +53,7 @@ if ($method == 'DELETE') {
     ));
 
   } else {
-    http_response_code(500); # internal server error
+    http_response_code(502); # bad gateway
 
     echo json_encode(array(
       "status" => false,
