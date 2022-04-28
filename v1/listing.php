@@ -39,16 +39,10 @@ if ($method == 'POST') {
       $data['status']=1;
     }
     if (!empty($data['category'])){ #$data['category'] = null ou 1 catégorie à séléctionner (liste)
-      $fcategory=0;
-      foreach ($data['category'] as $value) {
-        $req = $db->prepare('SELECT * FROM category WHERE id = ?;');
-        $req->execute(array($value));
-        $test = $req->fetch();
-        if (!$test){ # fake category
-          $fcategory=1;
-        }
-      }
-      if ($fcategory==1){
+      $req = $db->prepare('SELECT * FROM category WHERE id = ?;');
+      $req->execute(array($data['category']));
+      $test = $req->fetch();
+      if (!$test){ # fake category
         $errors[]='invalid_category';
       }
     }
