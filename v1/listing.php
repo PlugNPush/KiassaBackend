@@ -32,9 +32,24 @@ if ($method == 'POST') {
         $errors[]='invalid_photo_url';
       }
     }
-    #$data['status'] = 1 si en vente ou 0 si privé (bouton)
+    if ($data['status'] != 0 && $data['status'] != 1) { #$data['status'] = 1 si en vente ou 0 si privé (bouton)
+      $errors[]='invalid_status';
+    }
     $data['seller'] = $connnected['data']['id']
-    #$data['category'] = null ou 1 catégorie à séléctionner (liste)
+    if (!empty($data['category'])){ #$data['category'] = null ou 1 catégorie à séléctionner (liste)
+      $fcategory=0;
+      foreach ($data['category'] as $value) {
+        $req = $db->prepare('SELECT * FROM category WHERE id = ?;');
+        $req->execute(array($value));
+        $test = $req->fetch();
+        if (!$test){ # fake category
+          $fcategory=1;
+        }
+      }
+      if ($fcategory==1){
+        $errors[]='invalid_category';
+      }
+    }
 
     if (!empty($errors)){
       http_response_code(400); # bad request
