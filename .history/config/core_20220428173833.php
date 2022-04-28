@@ -125,11 +125,8 @@ function connected() {
       $req3 = $db->prepare('UPDATE FROM tokens SET expiration = ? WHERE token = ?;');
       $req3->execute(array($newdate, $token));
 
-      $req4 = $db->prepare('SELECT * FROM tokens WHERE token = ?;');
-      $req4->execute(array($token));
-      $test4 = $req4->fetch();
 
-      return array("status" => true, "data" => $test2, "tokendata" => $test4);
+      return array("status" => true, "data" => $test2);
     } else {
       return array("status" => false, "error" => "token_expired");
     }
