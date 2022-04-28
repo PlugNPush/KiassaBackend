@@ -22,10 +22,8 @@ if ($method == 'POST') {
       }
     }
     # test si les données sont valides
-    // Try to convert the string to a float
-    $floatVal = floatval($data['price']);
-    // If the parsing not succeeded or the value is equivalent to an int
-    if(!$floatVal || intval($floatVal) == $floatVal)
+    $floatVal = floatval($data['price']); // Try to convert the string to a float
+    if(!$floatVal) // If the parsing not succeeded
     {
         $errors[]='invalid_price';
     }
