@@ -2,8 +2,6 @@
 
 require_once '../config/core.php';
 
-$connected = connected();
-
 if ($method == 'POST') {
   if ($connected['status'] == true){
 

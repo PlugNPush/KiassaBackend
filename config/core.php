@@ -136,6 +136,6 @@ function connected() {
   } else {
     return array("status" => false, "error" => "invalid_token");
   }
-
 }
 
+$connected = connected();

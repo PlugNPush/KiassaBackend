@@ -21,7 +21,7 @@ if ($method == 'POST') {
     exit();
   }
 
-  $req = $db->prepare('SELECT * FROM listing WHERE ((name LIKE ? OR description LIKE ?) AND  status = 1);');
+  $req = $db->prepare('SELECT * FROM listing WHERE ((name LIKE ? OR description LIKE ?) AND status = 1);');
   $req->execute(array(
     '%'.$data['search'].'%',
     '%'.$data['search'].'%'
