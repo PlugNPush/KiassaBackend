@@ -61,7 +61,7 @@ if ($method == 'POST') {
 
     } else {
 
-      $data['seller'] = $connnected['data']['id'];
+      $data['seller'] = $connected['data']['id'];
       $data['date'] = date('Y-m-d H:i:s');
       $req=$db->prepare('INSERT INTO listing(name, address, price, description, status, photo, seller, category, date) VALUES(:name, :address, :price, :description, :status, :photo, :seller, :category, :date);');
       $req->execute(array(
