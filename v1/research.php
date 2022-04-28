@@ -8,8 +8,8 @@ if ($method == 'POST') {
 
   # test si les données sont vides
   $errors=array();
-  if (empty($data['listing'])){
-    $errors[]='missing_listing';
+  if (empty($data['search'])){
+    $errors[]='missing_search';
   }
 
   if (!empty($errors)){
@@ -25,22 +25,24 @@ if ($method == 'POST') {
   }
 
   # recherche de l'email dans la db
-  $req = $db->prepare('SELECT * FROM listing WHERE name = ?;');
-  $req->execute(array($data['listing']));
+  $req = $db->prepare('SELECT * FROM listing WHERE ((name LIKE ? OR description LIKE ?) AND  status = 1);');
+  $req->execute(array(
+    '%'.$data['search'].'%',
+    '%'.$data['search'].'%'
+  ));
   $test = $req->fetch();
 
 
-  if (!$test){ # mauvais nom de produit
+  if (!$test){ # pas de résultats
 
-    http_response_code(404); # not found
+    http_response_code(204); # no content
 
     echo json_encode(array(
       "status" => false,
-      "description" => array("listing_not_exists"),
-      "returntosender" => $data
+      "description" => array("no_results")
     ));
 
-  } else { # bon nom de produit
+  } else { # résultats ok
 
     # ajout du token dans la db
     $req2=$db->prepare('SELECT id, name, price, description, status, photo, seller, category FROM listing WHERE name = ?;');
@@ -49,7 +51,6 @@ if ($method == 'POST') {
       "name" => $test['name'],
       "price" => $test['price'],
       "description" => $test['description'],
-      "status" => $test['status'],
       "photo" => $test['photo'],
       "seller" => $test['seller'],
       "category" => $test['category'],
@@ -64,7 +65,7 @@ if ($method == 'POST') {
         "userdata" => $test
       ));
     } else {
-      http_response_code(500); # internal server error
+      http_response_code(502); # bad gateway
 
       echo json_encode(array(
         "status" => false,
