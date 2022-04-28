@@ -8,9 +8,6 @@ if ($method == 'POST') {
 
   # test si les données sont vides
   $errors=array();
-  if (empty($data['search'])){
-    $errors[]='missing_search';
-  }
 
   if (!empty($errors)){
     http_response_code(400); # bad request
@@ -24,13 +21,18 @@ if ($method == 'POST') {
     exit();
   }
 
-  # recherche de l'email dans la db
-  $req = $db->prepare('SELECT * FROM listing WHERE ((name LIKE ? OR description LIKE ?) AND  status = 1);');
-  $req->execute(array(
-    '%'.$data['search'].'%',
-    '%'.$data['search'].'%'
-  ));
-  $test = $req->fetchAll();
+  if (empty($data['search'])) {
+    $req = $db->prepare('SELECT * FROM listing WHERE status = 1);');
+    $req->execute();
+    $test = $req->fetchAll();
+  } else {
+    $req = $db->prepare('SELECT * FROM listing WHERE ((name LIKE ? OR description LIKE ?) AND  status = 1);');
+    $req->execute(array(
+      '%'.$data['search'].'%',
+      '%'.$data['search'].'%'
+    ));
+    $test = $req->fetchAll();
+  }
 
 
   if (!$test){ # pas de résultats
