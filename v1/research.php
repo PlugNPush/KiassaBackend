@@ -43,10 +43,16 @@ if ($method == 'POST') {
   } else { # bon nom de produit
 
     # ajout du token dans la db
-    $req2=$db->prepare('SELECT id FROM listing WHERE name = ?;');
+    $req2=$db->prepare('SELECT id, name, price, description, status, photo, seller, category FROM listing WHERE name = ?;');
     $req2->execute(array(
       "id" => $test['id'],
-      "name" => $test['name']
+      "name" => $test['name'],
+      "price" => $test['price'],
+      "description" => $test['description'],
+      "status" => $test['status'],
+      "photo" => $test['photo'],
+      "seller" => $test['seller'],
+      "category" => $test['category'],
     ));
 
     if ($req2){
