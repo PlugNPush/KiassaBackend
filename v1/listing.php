@@ -16,7 +16,7 @@ if ($method == 'POST') {
     }
     if (empty($data['address'])){
       if (!empty($connnected['data']['address'])){
-        $data['address']=$connnected['data']['address']; # address du vendeur par défault
+        $data['address']=$connnected['data']['address']; # address du vendeur par défaut
       } else {
         $errors[]='missing_address';
       }
@@ -34,6 +34,9 @@ if ($method == 'POST') {
     }
     if ($data['status'] != 0 && $data['status'] != 1) { #$data['status'] = 1 si en vente ou 0 si privé (bouton)
       $errors[]='invalid_status';
+    }
+    if (empty($data['status'])){ # par défaut en vente
+      $data['status']=1;
     }
     if (!empty($data['category'])){ #$data['category'] = null ou 1 catégorie à séléctionner (liste)
       $fcategory=0;
@@ -72,7 +75,7 @@ if ($method == 'POST') {
         "status" => $data['status'], # 0 ou 1
         "photo" => $data['photo'], # non obligatoire
         "seller" => $data['seller'],
-        "category" => $data['category'],
+        "category" => $data['category'], # non obligatoire
         "date" => $data['date']
       ));
 
@@ -83,8 +86,7 @@ if ($method == 'POST') {
         echo json_encode(array(
           "status" => true,
           "description" => array("success"),
-          "data" => $data,
-          "connected" => $connected
+          "data" => $data
         ));
       } else {
         http_response_code(502); # bad gateway
