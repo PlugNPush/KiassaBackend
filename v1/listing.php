@@ -83,7 +83,7 @@ if ($method == 'POST') {
         echo json_encode(array(
           "status" => true,
           "description" => array("success"),
-          "data" => $test
+          "data" => $data
         ));
       } else {
         http_response_code(502); # bad gateway
