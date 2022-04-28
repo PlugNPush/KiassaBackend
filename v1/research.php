@@ -21,18 +21,12 @@ if ($method == 'POST') {
     exit();
   }
 
-  if (empty($data['search'])) {
-    $req = $db->prepare('SELECT * FROM listing WHERE status = 1);');
-    $req->execute();
-    $test = $req->fetchAll();
-  } else {
-    $req = $db->prepare('SELECT * FROM listing WHERE ((name LIKE ? OR description LIKE ?) AND  status = 1);');
-    $req->execute(array(
-      '%'.$data['search'].'%',
-      '%'.$data['search'].'%'
-    ));
-    $test = $req->fetchAll();
-  }
+  $req = $db->prepare('SELECT * FROM listing WHERE ((name LIKE ? OR description LIKE ?) AND  status = 1);');
+  $req->execute(array(
+    '%'.$data['search'].'%',
+    '%'.$data['search'].'%'
+  ));
+  $test = $req->fetchAll();
 
 
   if (!$test){ # pas de résultats
