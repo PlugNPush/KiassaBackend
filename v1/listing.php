@@ -35,7 +35,6 @@ if ($method == 'POST') {
     if ($data['status'] != 0 && $data['status'] != 1) { #$data['status'] = 1 si en vente ou 0 si privé (bouton)
       $errors[]='invalid_status';
     }
-    $data['seller'] = $connnected['data']['id'];
     if (!empty($data['category'])){ #$data['category'] = null ou 1 catégorie à séléctionner (liste)
       $fcategory=0;
       foreach ($data['category'] as $value) {
@@ -62,6 +61,7 @@ if ($method == 'POST') {
 
     } else {
 
+      $data['seller'] = $connnected['data']['id'];
       $data['date'] = date('Y-m-d H:i:s');
       $req=$db->prepare('INSERT INTO listing(name, address, price, description, status, photo, seller, category, date) VALUES(:name, :address, :price, :description, :status, :photo, :seller, :category, :date);');
       $req->execute(array(
@@ -83,7 +83,8 @@ if ($method == 'POST') {
         echo json_encode(array(
           "status" => true,
           "description" => array("success"),
-          "data" => $data
+          "data" => $data,
+          "connected" => $connected
         ));
       } else {
         http_response_code(502); # bad gateway
