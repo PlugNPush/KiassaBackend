@@ -15,8 +15,8 @@ if ($method == 'POST') {
       $errors[]='missing_name';
     }
     if (empty($data['address'])){
-      if (!empty($connnected['data']['address'])){
-        $data['address']=$connnected['data']['address']; # address du vendeur par défaut
+      if (!empty($connected['data']['address'])){
+        $data['address']=$connected['data']['address']; # address du vendeur par défaut
       } else {
         $errors[]='missing_address';
       }
