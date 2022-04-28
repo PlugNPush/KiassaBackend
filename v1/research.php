@@ -45,7 +45,7 @@ if ($method == 'POST') {
       echo json_encode(array(
         "status" => true,
         "description" => array("success"),
-        "userdata" => $test
+        "data" => $test
       ));
   }
 
