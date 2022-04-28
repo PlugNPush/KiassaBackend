@@ -14,11 +14,12 @@ if ($method == 'POST') {
     if (empty($data['name'])){
       $errors[]='missing_name';
     }
-    if (empty($data['address'])){ # address du vendeur par défault
-      $data['address']='';
-    }
-    if (empty($data['seller'])){ # id du vendeur
-      $errors[]='missing_name';
+    if (empty($data['address'])){
+      if (!empty($connnected['data']['address'])){
+        $data['address']=$connnected['data']['address']; # address du vendeur par défault
+      } else {
+        $errors[]='missing_address';
+      }
     }
     # test si les données sont valides
     // Try to convert the string to a float
