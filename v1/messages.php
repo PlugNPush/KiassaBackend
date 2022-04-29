@@ -47,7 +47,7 @@ if ($method == 'GET') {
       $req->execute(array($data['receiver']));
       $test = $req->fetch();
 
-      if (!$test) {
+      if (!$test || $data['receiver'] == $connected['data']['id']) {
         $errors[]='invalid_receiver';
       }
     }
@@ -110,7 +110,7 @@ if ($method == 'GET') {
         $req->execute(array($data['receiver']));
         $test = $req->fetch();
 
-        if (!$test) {
+        if (!$test || $data['receiver'] == $connected['data']['id']) {
           $errors[]='invalid_receiver';
         }
       }
@@ -194,7 +194,7 @@ if ($method == 'GET') {
       $req->execute(array($data['receiver']));
       $test = $req->fetch();
 
-      if (!$test) {
+      if (!$test || $data['receiver'] == $connected['data']['id']) {
         $errors[]="invalid_receiver";
       }
     }
