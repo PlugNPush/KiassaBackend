@@ -32,6 +32,11 @@ if ($method == 'PUT') {
 
       if (!empty($data['name'])){
 
+        if(true){
+
+          http_response_code(200);
+        } else{
+
           http_response_code(400); # bad request
 
           echo json_encode(array(
@@ -39,6 +44,7 @@ if ($method == 'PUT') {
             "description" => array("bad request -> name can't be NULL"),
             "returntosender" => $data
           ));
+        }
       }
   }
 
