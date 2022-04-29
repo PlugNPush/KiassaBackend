@@ -167,7 +167,8 @@ if ($method == 'POST') {
     } else { # test si les données sont valides
       # on vérifie si l'objet existe dans la db (id unique)
       $id_fetch = $db->prepare('SELECT * FROM listing WHERE id = ?;');
-      $object = $id_fetch->execute(array($data['listing']));
+      $id_fetch->execute(array($data['listing']));
+      $object = $id_fetch->fetch();
       if (!$object || $object['seller']!=$connected['data']['id']) { # si l'objet n'existe pas ou si l'objet n'appartient pas à l'utilisateur
         $errors[]='invalid_listing';
       }
@@ -187,7 +188,7 @@ if ($method == 'POST') {
 
     } else {
 
-      $req = $db->prepare('DELETE * FROM listing WHERE id = ?;');
+      $req = $db->prepare('DELETE FROM listing WHERE id = ?;');
       $test = $req->execute(array($object['listing']));
 
       if ($test){
