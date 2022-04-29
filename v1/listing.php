@@ -167,8 +167,7 @@ if ($method == 'POST') {
     } else { # test si les données sont valides
       # on vérifie si l'objet existe dans la db (id unique)
       $id_fetch = $db->prepare('SELECT * FROM listing WHERE id = ?;');
-      $id_fetch->execute(array($data['listing']));
-      $object = $id_fetch->fetch();
+      $object = $id_fetch->execute(array($data['listing']));
       if (!$object || $object['seller']!=$connected['data']['id']) { # si l'objet n'existe pas ou si l'objet n'appartient pas à l'utilisateur
         $errors[]='invalid_listing';
       }
@@ -188,14 +187,26 @@ if ($method == 'POST') {
 
     } else {
 
-      # $object
-      http_response_code(200); # ok
+      $req = $db->prepare('DELETE * FROM listing WHERE id = ?;');
+      $test = $req->execute(array($object['listing']));
 
-      echo json_encode(array(
-        "status" => true,
-        "description" => array("success"),
-        "data" => $object
-      ));
+      if ($test){
+        # $object
+        http_response_code(200); # ok
+
+        echo json_encode(array(
+          "status" => true,
+          "description" => array("success")
+        ));
+      } else {
+        http_response_code(502); # bad gateway
+
+        echo json_encode(array(
+          "status" => false,
+          "description" => array("internal_error"),
+          "returntosender" => array("data"=>$data,"listing"=>$object)
+        ));
+      }
     }
   } else {
     http_response_code(403); # forbiden
