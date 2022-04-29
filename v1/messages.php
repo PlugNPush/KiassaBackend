@@ -173,19 +173,19 @@ if ($method == 'GET') {
 
   if ($connected['status'] == true) {
     $errors=array();
-    if (empty($data['content']) && empty($data['receiver'])) {
+    if (empty($data['message']) && empty($data['receiver'])) {
       $errors[]='misssing_ambigious_data';
-    } else if (!empty($data['content']) && !empty($data['receiver'])) {
+    } else if (!empty($data['message']) && !empty($data['receiver'])) {
       $errors[]='extra_ambigious_data';
     }
 
-    if (!empty($data['content'])) {
+    if (!empty($data['message'])) {
       $req = $db->prepare('SELECT * FROM messages WHERE id = ?;');
-      $req->execute(array($data['content']));
+      $req->execute(array($data['message']));
       $test = $req->fetch();
 
       if (!$test) {
-        $errors[]="invalid_content";
+        $errors[]="invalid_message";
       }
     }
 
@@ -209,10 +209,10 @@ if ($method == 'GET') {
       ));
 
     } else {
-      if (!empty($data['content'])) {
+      if (!empty($data['message'])) {
         # Supprimer un message
         $req = $db->prepare('DELETE FROM messages WHERE id = ?;');
-        $test = $req->execute(array($data['content']));
+        $test = $req->execute(array($data['message']));
 
         if ($test){ # message bien supprimé
 
@@ -276,21 +276,21 @@ if ($method == 'GET') {
 
   if ($connected['status'] == true) {
     $errors=array();
-    if (empty($data['content'])) {
-      $errors[]='misssing_content';
+    if (empty($data['message'])) {
+      $errors[]='misssing_message';
     }
 
     if (empty($data['newcontent'])) {
       $errors[]='missing_newcontent';
     }
 
-    if (!empty($data['content'])) {
+    if (!empty($data['message'])) {
       $req = $db->prepare('SELECT * FROM messages WHERE id = ?;');
-      $req->execute(array($data['content']));
+      $req->execute(array($data['message']));
       $test = $req->fetch();
 
       if (!$test) {
-        $errors[]="invalid_content";
+        $errors[]="invalid_message";
       }
     }
 
@@ -305,10 +305,10 @@ if ($method == 'GET') {
 
     } else {
         $req = $db->prepare('UPDATE messages SET content = ?, edited = 1 WHERE id = ?;');
-        $test = $req->execute(array($data['newcontent'], $data['content']));
+        $test = $req->execute(array($data['newcontent'], $data['message']));
 
         $req2 = $db->prepare('SELECT * FROM messages WHERE id = ?;');
-        $req2->execute(array($data['content']));
+        $req2->execute(array($data['message']));
         $test2 = $req2->fetch();
 
 
