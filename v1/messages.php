@@ -245,7 +245,7 @@ if ($method == 'PATCH') {
       $errors[]='misssing_message';
     }
 
-    if (!empty($data['newmessage'])) {
+    if (empty($data['newmessage'])) {
       $errors[]='missing_newmessage';
     }
 
