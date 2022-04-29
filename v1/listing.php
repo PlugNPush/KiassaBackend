@@ -1,5 +1,7 @@
 <?php
 
+# status : 0=>privé, 1=>en vente, 2=>en transaction, 3=>vendu
+
 require_once '../config/core.php';
 
 if ($method == 'POST') {
@@ -119,6 +121,60 @@ if ($method == 'POST') {
       if (!$object) {
         $errors[]='invalid_id';
       }
+    }
+
+    if (!empty($errors)){
+      http_response_code(400); # bad request
+
+      echo json_encode(array(
+        "status" => false,
+        "description" => $errors,
+        "returntosender" => $data
+      ));
+
+    } else {
+
+      # $object
+      http_response_code(200); # ok
+
+      echo json_encode(array(
+        "status" => true,
+        "description" => array("success"),
+        "data" => $object
+      ));
+    }
+  } else {
+    http_response_code(403); # forbiden
+
+    echo json_encode(array(
+      "status" => false,
+      "description" => array("invalid_token"),
+      "returntosender" => $data,
+      "returnheaders" => $headers
+    ));
+  }
+
+} elseif ($method == 'DELETE') {
+
+  if ($connected['status'] == true){
+
+    // Return alert
+
+    # test si les données sont vides
+    $errors=array();
+    if (empty($data['id'])){
+      $errors[]='missing_id';
+    } else { # test si les données sont valides
+      # on vérifie si l'objet existe dans la db (id unique)
+      $id_fetch = $db->prepare('SELECT * FROM listing WHERE id = ?;');
+      $id_fetch->execute(array($data['id']));
+      $object = $id_fetch->fetch();
+      if (!$object || $object['seller']!=$connected['data']['id']) { # si l'objet n'existe pas ou si l'objet n'appartient pas à l'utilisateur
+        $errors[]='invalid_id';
+      }
+    }
+    if ($data['status'] != 0 && $data['status'] != 1 && $data['status'] != 3) { # 3 automatique
+      $errors[]='invalid_status';
     }
 
     if (!empty($errors)){
