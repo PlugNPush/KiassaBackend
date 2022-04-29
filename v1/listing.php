@@ -101,6 +101,57 @@ if ($method == 'POST') {
     ));
   }
 
+} elseif ($method == 'GET') {
+
+  if ($connected['status'] == true){
+
+    // Return alert
+
+    # test si les données sont vides
+    $errors=array();
+    if (empty($data['id'])){
+      $errors[]='missing_id';
+    } else { # test si les données sont valides
+      # on vérifie si l'objet existe dans la db (id unique)
+      $id_fetch = $db->prepare('SELECT * FROM listing WHERE id = ?;');
+      $id_fetch->execute(array($data['id']));
+      $object = $id_fetch->fetch();
+      if (!$object) {
+        $errors[]='invalid_id';
+      }
+    }
+
+    if (!empty($errors)){
+      http_response_code(400); # bad request
+
+      echo json_encode(array(
+        "status" => false,
+        "description" => $errors,
+        "returntosender" => $data
+      ));
+
+    } else {
+
+      # $object
+      http_response_code(200); # ok
+
+      echo json_encode(array(
+        "status" => true,
+        "description" => array("success"),
+        "data" => $object
+      ));
+    }
+  } else {
+    http_response_code(403); # forbiden
+
+    echo json_encode(array(
+      "status" => false,
+      "description" => array("invalid_token"),
+      "returntosender" => $data,
+      "returnheaders" => $headers
+    ));
+  }
+
 } else {
 
   // Unknown method
