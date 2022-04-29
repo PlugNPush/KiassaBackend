@@ -6,7 +6,7 @@ if ($method == 'PATCH') {
   if ($connected['status'] == true) {
     if (empty($data['reciever'])) {
       # lister les conversations
-      $req = $db->prepare('SELECT CASE WHEN reciever = ? THEN sender ELSE reciever END AS contact, max(date) AS date FROM messages WHERE reciever = ? OR sender = ? GROUP BY CASE WHEN reciever = ? THEN sender ELSE reciever END;');
+      $req = $db->prepare('SELECT CASE WHEN reciever = ? THEN sender ELSE reciever END AS contact, max(date) AS date FROM messages WHERE reciever = ? OR sender = ? GROUP BY CASE WHEN reciever = ? THEN sender ELSE reciever END ORDER BY date DESC;');
       $req->execute(array($connected['data']['id'], $connected['data']['id'], $connected['data']['id'], $connected['data']['id']));
       $test = $req->fetchAll();
 
