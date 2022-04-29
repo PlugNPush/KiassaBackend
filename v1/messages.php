@@ -269,7 +269,7 @@ if ($method == 'PATCH') {
       ));
 
     } else {
-        $req = $db->prepare('UPDATE messages SET message = ? WHERE id = ?;');
+        $req = $db->prepare('UPDATE messages SET message = ?, edited = 1 WHERE id = ?;');
         $test = $req->execute(array($data['newmessage'], $data['message']));
 
         $req2 = $db->prepare('SELECT * FROM messages WHERE id = ?;');

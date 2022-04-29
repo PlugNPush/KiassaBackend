@@ -101,7 +101,7 @@ if ($method == 'POST') {
     ));
   }
 
-} elseif ($method == 'GET') {
+} elseif ($method == 'PATCH') {
 
   if ($connected['status'] == true){
 
