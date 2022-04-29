@@ -189,7 +189,7 @@ if ($method == 'POST') {
     } else {
 
       $req = $db->prepare('DELETE FROM listing WHERE id = ?;');
-      $test = $req->execute(array($object['listing']));
+      $test = $req->execute(array($data['listing']));
 
       if ($test){
         # $object
