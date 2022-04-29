@@ -20,11 +20,13 @@ if ($method == 'GET') {
           "data" => $test
         ));
       } else {
-        http_response_code(204); # no content
+        http_response_code(503); # no content
 
         echo json_encode(array(
           "status" => true,
-          "description" => array("no_results")
+          "description" => array("no_results"),
+          "connected" => $connected,
+          "data" => $data
         ));
       }
     } else {
