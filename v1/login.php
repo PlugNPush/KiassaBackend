@@ -23,7 +23,7 @@ if ($method == 'POST') {
       $errors[]='missing_email';
     }
     if (empty($data['plainpassword'])){
-      $errors[]='missing_password';
+      $errors[]='missing_plainpassword';
     }
     # test si les données sont valides
     if (!empty($data['email'])){

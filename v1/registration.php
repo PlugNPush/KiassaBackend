@@ -12,7 +12,7 @@ if ($method == 'POST') {
     $errors[]='missing_email';
   }
   if (empty($data['plainpassword'])){
-    $errors[]='missing_password';
+    $errors[]='missing_plainpassword';
   }
   if (empty($data['name'])){
     $errors[]='missing_name';
