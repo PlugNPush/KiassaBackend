@@ -32,7 +32,7 @@ if ($method == 'PUT') {
 
       if (!empty($data['name'])){
 
-        if(true){
+        if($data['name'])==NULL){
 
           http_response_code(200);
         } else{
