@@ -34,28 +34,7 @@ if ($method == 'PUT') {
 
         if($data['name'])!=NULL){
 
-          $req = $db->prepare('UPDATE users SET name = ? WHERE id = ?;');
-          $test = $req->execute(array($data['name'], $data['id']));
-
-          if ($test){ # message bien modifié
-
-            http_response_code(200); # Ok
-
-            echo json_encode(array(
-              "status" => true,
-              "description" => array("success name change"),
-              "data" => $test
-            ));
-
-          } else {
-            http_response_code(502); # bad gateway
-
-            echo json_encode(array(
-              "status" => false,
-              "description" => array("internal_error -> name change"),
-              "returntosender" => $data
-            ));
-          }
+          http_response_code(200);
         } else{
 
           http_response_code(400); # bad request
