@@ -1,5 +1,7 @@
 <?php
 
+# status : 0=>privé, 1=>en vente, 2=>en transaction, 3=>vendu
+
 require_once '../config/core.php';
 
 if ($method == 'POST') {
@@ -109,15 +111,15 @@ if ($method == 'POST') {
 
     # test si les données sont vides
     $errors=array();
-    if (empty($data['id'])){
-      $errors[]='missing_id';
+    if (empty($data['listing'])){
+      $errors[]='missing_listing';
     } else { # test si les données sont valides
       # on vérifie si l'objet existe dans la db (id unique)
       $id_fetch = $db->prepare('SELECT * FROM listing WHERE id = ?;');
-      $id_fetch->execute(array($data['id']));
+      $id_fetch->execute(array($data['listing']));
       $object = $id_fetch->fetch();
       if (!$object) {
-        $errors[]='invalid_id';
+        $errors[]='invalid_listing';
       }
     }
 
@@ -140,6 +142,72 @@ if ($method == 'POST') {
         "description" => array("success"),
         "data" => $object
       ));
+    }
+  } else {
+    http_response_code(403); # forbiden
+
+    echo json_encode(array(
+      "status" => false,
+      "description" => array("invalid_token"),
+      "returntosender" => $data,
+      "returnheaders" => $headers
+    ));
+  }
+
+} elseif ($method == 'DELETE') {
+
+  if ($connected['status'] == true){
+
+    // Return alert
+
+    # test si les données sont vides
+    $errors=array();
+    if (empty($data['listing'])){
+      $errors[]='missing_listing';
+    } else { # test si les données sont valides
+      # on vérifie si l'objet existe dans la db (id unique)
+      $id_fetch = $db->prepare('SELECT * FROM listing WHERE id = ?;');
+      $id_fetch->execute(array($data['listing']));
+      $object = $id_fetch->fetch();
+      if (!$object || $object['seller']!=$connected['data']['id']) { # si l'objet n'existe pas ou si l'objet n'appartient pas à l'utilisateur
+        $errors[]='invalid_listing';
+      }
+    }
+    if ($data['status'] != 0 && $data['status'] != 1 && $data['status'] != 3) { # 3 automatique
+      $errors[]='invalid_status';
+    }
+
+    if (!empty($errors)){
+      http_response_code(400); # bad request
+
+      echo json_encode(array(
+        "status" => false,
+        "description" => $errors,
+        "returntosender" => $data
+      ));
+
+    } else {
+
+      $req = $db->prepare('DELETE FROM listing WHERE id = ?;');
+      $test = $req->execute(array($data['listing']));
+
+      if ($test){
+        # $object
+        http_response_code(200); # ok
+
+        echo json_encode(array(
+          "status" => true,
+          "description" => array("success")
+        ));
+      } else {
+        http_response_code(502); # bad gateway
+
+        echo json_encode(array(
+          "status" => false,
+          "description" => array("internal_error"),
+          "returntosender" => array("data"=>$data,"listing"=>$object)
+        ));
+      }
     }
   } else {
     http_response_code(403); # forbiden
