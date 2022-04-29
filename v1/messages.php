@@ -2,7 +2,7 @@
 
 require_once '../config/core.php';
 
-if ($method == 'GET') {
+if ($method == 'PATCH') {
   if ($connected['status'] == true) {
     if (empty($data['reciever'])) {
       # lister les conversations
@@ -20,13 +20,11 @@ if ($method == 'GET') {
           "data" => $test
         ));
       } else {
-        http_response_code(503); # no content
+        http_response_code(204); # no content
 
         echo json_encode(array(
           "status" => true,
-          "description" => array("no_results"),
-          "connected" => $connected,
-          "data" => $data
+          "description" => array("no_results")
         ));
       }
     } else {
@@ -46,13 +44,11 @@ if ($method == 'GET') {
           "data" => $test
         ));
       } else {
-        http_response_code(202); # no content
+        http_response_code(204); # no content
 
         echo json_encode(array(
           "status" => true,
-          "description" => array("no_results"),
-          "connected" => $connected,
-          "data" => $data
+          "description" => array("no_results")
         ));
       }
 
