@@ -111,15 +111,15 @@ if ($method == 'POST') {
 
     # test si les données sont vides
     $errors=array();
-    if (empty($data['id'])){
-      $errors[]='missing_id';
+    if (empty($data['listing'])){
+      $errors[]='missing_listing';
     } else { # test si les données sont valides
       # on vérifie si l'objet existe dans la db (id unique)
       $id_fetch = $db->prepare('SELECT * FROM listing WHERE id = ?;');
-      $id_fetch->execute(array($data['id']));
+      $id_fetch->execute(array($data['listing']));
       $object = $id_fetch->fetch();
       if (!$object) {
-        $errors[]='invalid_id';
+        $errors[]='invalid_listing';
       }
     }
 
@@ -162,15 +162,15 @@ if ($method == 'POST') {
 
     # test si les données sont vides
     $errors=array();
-    if (empty($data['id'])){
-      $errors[]='missing_id';
+    if (empty($data['listing'])){
+      $errors[]='missing_listing';
     } else { # test si les données sont valides
       # on vérifie si l'objet existe dans la db (id unique)
       $id_fetch = $db->prepare('SELECT * FROM listing WHERE id = ?;');
-      $id_fetch->execute(array($data['id']));
+      $id_fetch->execute(array($data['listing']));
       $object = $id_fetch->fetch();
       if (!$object || $object['seller']!=$connected['data']['id']) { # si l'objet n'existe pas ou si l'objet n'appartient pas à l'utilisateur
-        $errors[]='invalid_id';
+        $errors[]='invalid_listing';
       }
     }
     if ($data['status'] != 0 && $data['status'] != 1 && $data['status'] != 3) { # 3 automatique
