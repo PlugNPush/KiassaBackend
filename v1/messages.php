@@ -138,9 +138,9 @@ if ($method == 'GET') {
 
   if ($connected['status'] == true) {
     $errors=array();
-    if (empty($data['message']) && empty($data['reciever'])){
+    if (empty($data['message']) && empty($data['reciever'])) {
       $errors[]='misssing_ambigious_data';
-    } else if (!empty($data['message']) && !empty($data['reciever']) {
+    } else if (!empty($data['message']) && !empty($data['reciever'])) {
       $errors[]='extra_ambigious_data';
     }
 
