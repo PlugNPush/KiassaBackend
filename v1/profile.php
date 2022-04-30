@@ -99,7 +99,7 @@ if ($method == 'PUT') {
         }
       }
 
-      if(isset($data['photo']) AND !empty($data['photo'])){
+      if(isset($data['photo'])){
 
         if (!empty($data['photo'])){
 
