@@ -155,7 +155,7 @@ if ($method == 'PUT') {
           ));
         }
 
-        if(!empty($errors)){
+        if(!empty($errors)){ #test
 
           if(empty($success)){
             $success[]='No Success';
