@@ -279,7 +279,7 @@ if ($method == 'POST') {
       if (!empty($data['photo'])){
         if(!filter_var($data['photo'], FILTER_VALIDATE_URL)){
           $errors[]='invalid_photo_url';
-          if (!empty($object['photo']){
+          if (!empty($object['photo'])){
             $data['photo']=$object['photo'];
           }
         }
@@ -298,7 +298,7 @@ if ($method == 'POST') {
         $test = $req->fetch();
         if (!$test){ # fake category
           $errors[]='invalid_category';
-          if (!empty($object['category']){
+          if (!empty($object['category'])){
             $data['category']=$object['category'];
           }
         }
