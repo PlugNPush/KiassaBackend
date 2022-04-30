@@ -99,19 +99,10 @@ if ($method == 'PUT') {
         }
       }
 
-      if(isset($data['photo'])){
+      if(isset($data['photo']) AND !empty($data['photo'])){
 
-        if (!empty($data['photo'])){
-
-          $req = $db->prepare('UPDATE users SET photo = ? WHERE id = ?;');
-          $test = $req->execute(array($data['photo'], $data['id']));
-
-        } else{
-
-          $req = $db->prepare('UPDATE users SET photo = ? WHERE id = ?;');
-          $test = $req->execute(array($data['photo'], $data['id']));
-
-        }
+        $req = $db->prepare('UPDATE users SET photo = ? WHERE id = ?;');
+        $test = $req->execute(array($data['photo'], $data['id']));
 
         if ($test){ # photo bien modifié
 
