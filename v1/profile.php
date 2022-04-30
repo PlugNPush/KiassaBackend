@@ -5,74 +5,115 @@ require_once '../config/core.php';
 if ($method == 'PUT') {
   # Modifier les données
 
-  # test si le nom est valide
-  $errors=array();
-  if (empty($data['id'])){
-    $errors[]='missing_id';
-  } else {
-    $req = $db->prepare('SELECT * FROM users WHERE id = ?;');
-    $req->execute(array($data['id']));
-    $test = $req->fetch();
+  if ($connected['status'] == true){
 
-    if (!$test) {
-      $errors[]='invalid_id';
-    }
-  }
-
-  if (!empty($errors)){
-    http_response_code(400); # bad request
-
-    echo json_encode(array(
-      "status" => false,
-      "description" => $errors,
-      "returntosender"=>$data
-    ));
-
+    # test si l'id est valide
+    $errors=array();
+    if (empty($connected['data']['id'])){
+      $errors[]='missing_id';
     } else {
+      $req = $db->prepare('SELECT * FROM users WHERE id = ?;');
+      $req->execute(array($connected['data']['id']));
+      $test = $req->fetch();
 
-      if (!empty($data['name'])){
-
-          $req = $db->prepare('UPDATE users SET name = ? WHERE id = ?;');
-          $test = $req->execute(array($data['name'], $data['id']));
-
-          if ($test){ # message bien modifié
-
-            http_response_code(200); # Ok
-
-            echo json_encode(array(
-              "status" => true,
-              "description" => array("success"),
-              "add_on" => ("name change"),
-              "data" => $test
-            ));
-
-          } else {
-            http_response_code(502); # bad gateway
-
-            echo json_encode(array(
-              "status" => false,
-              "description" => array("internal_error"),
-              "add_on" => ("name change"),
-              "returntosender" => $data
-            ));
-          }
+      if (!$test) {
+        $errors[]='invalid_id';
       }
+    }
 
-      if (isset($data['telephone'])){
+    if (!empty($errors)){
+      http_response_code(400); # bad request
 
-        if(!(preg_match("/^(?:(?:\+|00)33[\s.-]{0,3}(?:\(0\)[\s.-]{0,3})?|0)[1-9](?:(?:[\s.-]?\d{2}){4}|\d{2}(?:[\s.-]?\d{3}){2})$/", $data['telephone']) === 0) OR empty($data['telephone'])){
+      echo json_encode(array(
+        "status" => false,
+        "description" => $errors,
+        "returntosender"=>$data
+      ));
 
-          $req = $db->prepare('UPDATE users SET telephone = ? WHERE id = ?;');
-          $test = $req->execute(array($data['telephone'], $data['id']));
+      } else {
 
-          if ($test){ # message bien modifié
+        if (!empty($data['name'])){
+
+            $req = $db->prepare('UPDATE users SET name = ? WHERE id = ?;');
+            $test = $req->execute(array($data['name'], $connected['data']['id']));
+
+            if ($test){ # message bien modifié
+
+              http_response_code(200); # Ok
+
+              echo json_encode(array(
+                "status" => true,
+                "description" => array("success"),
+                "add_on" => ("name change"),
+                "data" => $test
+              ));
+
+            } else {
+              http_response_code(502); # bad gateway
+
+              echo json_encode(array(
+                "status" => false,
+                "description" => array("internal_error"),
+                "add_on" => ("name change"),
+                "returntosender" => $data
+              ));
+            }
+        }
+
+        if (isset($data['telephone'])){
+
+          if(!(preg_match("/^(?:(?:\+|00)33[\s.-]{0,3}(?:\(0\)[\s.-]{0,3})?|0)[1-9](?:(?:[\s.-]?\d{2}){4}|\d{2}(?:[\s.-]?\d{3}){2})$/", $data['telephone']) === 0) OR empty($data['telephone'])){
+
+            $req = $db->prepare('UPDATE users SET telephone = ? WHERE id = ?;');
+            $test = $req->execute(array($data['telephone'], $connected['data']['id']));
+
+            if ($test){ # message bien modifié
+
+              http_response_code(200); # Ok
+
+              echo json_encode(array(
+                "status" => true,
+                "description" => array("success"),
+                "add_on" => ("telephone change"),
+                "data" => $test
+              ));
+
+            } else {
+              http_response_code(502); # bad gateway
+
+              echo json_encode(array(
+                "status" => false,
+                "description" => array("internal_error"),
+                "add_on" => ("telephone change"),
+                "returntosender" => $data
+              ));
+            }
+          }  else{
+
+            http_response_code(400); # bad request
+
+            echo json_encode(array(
+              "status" => false,
+              "description" => array("bad request"),
+              "add_on" => ("invalid phone number"),
+              "returntosender" => $data
+            ));
+          }
+        }
+
+        if(isset($data['photo'])){
+
+          $req = $db->prepare('UPDATE users SET photo = ? WHERE id = ?;');
+          $test = $req->execute(array($data['photo'], $connected['data']['id']));
+
+          if ($test){ # photo bien modifié
 
             http_response_code(200); # Ok
 
             echo json_encode(array(
               "status" => true,
               "description" => array("success"),
-              "add_on" => ("telephone change"),
+              "add_on" => ("photo change"),
               "data" => $test
             ));
 
@@ -82,136 +123,110 @@ if ($method == 'PUT') {
             echo json_encode(array(
               "status" => false,
               "description" => array("internal_error"),
-              "add_on" => ("telephone change"),
+              "add_on" => ("photo change"),
               "returntosender" => $data
             ));
           }
-        }  else{
+        }
+
+
+        if (isset($data['address'])){
+
+          $req = $db->prepare('UPDATE users SET address = ? WHERE id = ?;');
+          $test = $req->execute(array($data['address'], $connected['data']['id']));
+
+          if ($test){ # message bien modifié
+
+            http_response_code(200); # Ok
+
+            echo json_encode(array(
+              "status" => true,
+              "description" => array("success"),
+              "add_on" => ("address change"),
+              "data" => $test
+            ));
+
+          } else {
+            http_response_code(502); # bad gateway
+
+            echo json_encode(array(
+              "status" => false,
+              "description" => array("internal_error"),
+              "add_on" => ("address change"),
+              "returntosender" => $data
+            ));
+          }
+        }
+
+        if (!empty($data['password'])){
+
+          if(!(preg_match("/^\S*(?=\S{8,})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])(?=\S*[\W])\S*$/", $data['password']) === 0)){
+
+            $data['password']=password_hash($data['password'], PASSWORD_DEFAULT);
+            $req = $db->prepare('UPDATE users SET password = ? WHERE id = ?;');
+            $test = $req->execute(array($data['password'], $connected['data']['id']));
+
+            if ($test){ # message bien modifié
+
+              http_response_code(200); # Ok
+
+              echo json_encode(array(
+                "status" => true,
+                "description" => array("success"),
+                "add_on" => ("password change"),
+                "data" => $test
+              ));
+
+            } else {
+              http_response_code(502); # bad gateway
+
+              echo json_encode(array(
+                "status" => false,
+                "description" => array("internal_error"),
+                "add_on" => ("password change"),
+                "returntosender" => $data
+              ));
+          }
+
+        } else {
 
           http_response_code(400); # bad request
 
           echo json_encode(array(
             "status" => false,
             "description" => array("bad request"),
-            "add_on" => ("invalid phone number"),
+            "add_on" => ("invalid password"),
             "returntosender" => $data
           ));
+
         }
-      }
 
-      if(isset($data['photo'])){
+        }
 
-        $req = $db->prepare('UPDATE users SET photo = ? WHERE id = ?;');
-        $test = $req->execute(array($data['photo'], $data['id']));
+        if (empty($data['name']) AND empty($data['telephone']) AND empty($data['photo']) AND empty($data['address']) AND empty($data['password'])){
 
-        if ($test){ # photo bien modifié
-
-          http_response_code(200); # Ok
-
-          echo json_encode(array(
-            "status" => true,
-            "description" => array("success"),
-            "add_on" => ("photo change"),
-            "data" => $test
-          ));
-
-        } else {
-          http_response_code(502); # bad gateway
+          http_response_code(400); # bad request
 
           echo json_encode(array(
             "status" => false,
-            "description" => array("internal_error"),
-            "add_on" => ("photo change"),
+            "description" => array("bad request"),
+            "add_on" => ("no data"),
             "returntosender" => $data
           ));
         }
-      }
+    }
 
+  } else {
 
-      if (isset($data['address'])){
+    http_response_code(403); # forbiden
 
-        $req = $db->prepare('UPDATE users SET address = ? WHERE id = ?;');
-        $test = $req->execute(array($data['address'], $data['id']));
+    echo json_encode(array(
+      "status" => false,
+      "description" => array("invalid_token"),
+      "returntosender" => $data,
+      "returnheaders" => $headers
+    ));
 
-        if ($test){ # message bien modifié
-
-          http_response_code(200); # Ok
-
-          echo json_encode(array(
-            "status" => true,
-            "description" => array("success"),
-            "add_on" => ("address change"),
-            "data" => $test
-          ));
-
-        } else {
-          http_response_code(502); # bad gateway
-
-          echo json_encode(array(
-            "status" => false,
-            "description" => array("internal_error"),
-            "add_on" => ("address change"),
-            "returntosender" => $data
-          ));
-        }
-      }
-
-      if (!empty($data['password'])){
-
-        if(!(preg_match("/^\S*(?=\S{8,})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])(?=\S*[\W])\S*$/", $data['password']) === 0)){
-
-          $data['password']=password_hash($data['password'], PASSWORD_DEFAULT);
-          $req = $db->prepare('UPDATE users SET password = ? WHERE id = ?;');
-          $test = $req->execute(array($data['password'], $data['id']));
-
-          if ($test){ # message bien modifié
-
-            http_response_code(200); # Ok
-
-            echo json_encode(array(
-              "status" => true,
-              "description" => array("success"),
-              "add_on" => ("password change"),
-              "data" => $test
-            ));
-
-          } else {
-            http_response_code(502); # bad gateway
-
-            echo json_encode(array(
-              "status" => false,
-              "description" => array("internal_error"),
-              "add_on" => ("password change"),
-              "returntosender" => $data
-            ));
-        }
-
-      } else {
-
-        http_response_code(400); # bad request
-
-        echo json_encode(array(
-          "status" => false,
-          "description" => array("bad request"),
-          "add_on" => ("invalid password"),
-          "returntosender" => $data
-        ));
-
-      }
-
-      }
-
-      if (empty($data['name']) AND empty($data['telephone']) AND empty($data['photo']) AND empty($data['address']) AND empty($data['password'])){
-
-        http_response_code(400); # bad request
-
-        echo json_encode(array(
-          "status" => false,
-          "description" => array("bad request"),
-          "add_on" => ("no data"),
-          "returntosender" => $data
-        ));
-      }
   }
 
 } else {
