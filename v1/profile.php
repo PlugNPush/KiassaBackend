@@ -58,6 +58,7 @@ if ($method == 'PUT') {
 
       if (!empty($data['telephone'])){
 
+        #if(!(preg_match("/^(?:(?:\+|00)33[\s.-]{0,3}(?:\(0\)[\s.-]{0,3})?|0)[1-9](?:(?:[\s.-]?\d{2}){4}|\d{2}(?:[\s.-]?\d{3}){2})$/", $data['telephone']) === 0){ /////////// ERROR 500
         if(true){
 
           $req = $db->prepare('UPDATE users SET telephone = ? WHERE id = ?;');
@@ -94,6 +95,68 @@ if ($method == 'PUT') {
         }
       }
 
+      if (!empty($data['photo'])){
+
+        $req = $db->prepare('UPDATE users SET photo = ? WHERE id = ?;');
+        $test = $req->execute(array($data['photo'], $data['id']));
+
+        if ($test){ # message bien modifié
+
+          http_response_code(200); # Ok
+
+          echo json_encode(array(
+            "status" => true,
+            "description" => array("success photo change"),
+            "data" => $test
+          ));
+
+        } else {
+          http_response_code(502); # bad gateway
+
+          echo json_encode(array(
+            "status" => false,
+            "description" => array("internal_error -> photo change"),
+            "returntosender" => $data
+          ));
+        }
+      }
+
+      if (!empty($data['address'])){
+
+        $req = $db->prepare('UPDATE users SET address = ? WHERE id = ?;');
+        $test = $req->execute(array($data['address'], $data['id']));
+
+        if ($test){ # message bien modifié
+
+          http_response_code(200); # Ok
+
+          echo json_encode(array(
+            "status" => true,
+            "description" => array("success address change"),
+            "data" => $test
+          ));
+
+        } else {
+          http_response_code(502); # bad gateway
+
+          echo json_encode(array(
+            "status" => false,
+            "description" => array("internal_error -> address change"),
+            "returntosender" => $data
+          ));
+        }
+      }
+
+      if (!empty($data['name']) AND !empty($data['telephone']) AND !empty($data['photo']) AND !empty($data['address']) AND !empty($data['password'])){
+
+        http_response_code(400); # bad request
+
+        echo json_encode(array(
+          "status" => false,
+          "description" => array("internal_error -> no data"),
+          "returntosender" => $data
+        ));
+      }
   }
 
 } else {
