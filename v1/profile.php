@@ -7,7 +7,20 @@ if ($method == 'PUT') {
 
   # test si le nom est valide
   $errors=array();
+  if (empty($data['id'])){
+    $errors[]='missing_id';
+  } else {
+    $req = $db->prepare('SELECT * FROM users WHERE id = ?;');
+    $req->execute(array($data['id']));
+    $test = $req->fetch();
 
+    if (!$test) {
+      $errors[]='invalid_id';
+    }
+  }
+
+
+  }
 
 } else {
 
