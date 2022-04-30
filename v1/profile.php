@@ -59,7 +59,7 @@ if ($method == 'PUT') {
       if (!empty($data['telephone'])){
 
         #if(!(preg_match("/^(?:(?:\+|00)33[\s.-]{0,3}(?:\(0\)[\s.-]{0,3})?|0)[1-9](?:(?:[\s.-]?\d{2}){4}|\d{2}(?:[\s.-]?\d{3}){2})$/", $data['telephone']) === 0){ /////////// ERROR 500
-        if(true){
+        if(true){ #Tant que l erreur 500 au dessus n est pas fix //// pour debug
 
           $req = $db->prepare('UPDATE users SET telephone = ? WHERE id = ?;');
           $test = $req->execute(array($data['telephone'], $data['id']));
