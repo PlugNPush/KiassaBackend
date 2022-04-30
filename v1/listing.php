@@ -284,11 +284,11 @@ if ($method == 'POST') {
           }
         }
       }
-      if ($data['photo']!=$object['photo']) {
+      if (isset($data['photo']) && $data['photo']!=$object['photo']) {
         $success[]='photo_change';
       }
 
-      if ($data['status']!=$object['status']) {
+      if (isset($data['status']) && $data['status']!=$object['status']) {
         $success[]='status_change';
       }
 
@@ -303,7 +303,7 @@ if ($method == 'POST') {
           }
         }
       }
-      if ($data['category']!=$object['category']) {
+      if (isset($data['category']) && $data['category']!=$object['category']) {
         $success[]='category_change';
       }
 
