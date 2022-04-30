@@ -13,14 +13,9 @@ if ($method == 'PUT') {
     $req = $db->prepare('SELECT * FROM users WHERE id = ?;');
     $req->execute(array($data['id']));
     $test = $req->fetch();
-
-    if (!$test) {
-      $errors[]='invalid_id';
-    }
   }
 
 
-  }
 
 } else {
 
