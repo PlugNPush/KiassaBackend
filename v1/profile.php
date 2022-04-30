@@ -108,7 +108,9 @@ if ($method == 'PUT') {
 
         if (isset($data['password']) AND isset($data['plainpassword'])){
 
-          if($data['plainpassword'] == $connected['data']['password']){
+          $verify = password_verify($data['plainpassword'], $connected['data']['password']);
+
+          if($verify){
 
             if(!(preg_match("/^\S*(?=\S{8,})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])(?=\S*[\W])\S*$/", $data['password']) === 0)){
 
