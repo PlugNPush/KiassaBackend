@@ -158,34 +158,49 @@ if ($method == 'PUT') {
           }
         }
 
-        if (!empty($data['password'])){
+        if (isset($data['password']) AND isset($data['plainpassword'])){
 
-          if(!(preg_match("/^\S*(?=\S{8,})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])(?=\S*[\W])\S*$/", $data['password']) === 0)){
+          if($data['plainpassword'] == $connected['data']['password']){
 
-            $data['password']=password_hash($data['password'], PASSWORD_DEFAULT);
-            $req = $db->prepare('UPDATE users SET password = ? WHERE id = ?;');
-            $test = $req->execute(array($data['password'], $connected['data']['id']));
+            if(!(preg_match("/^\S*(?=\S{8,})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])(?=\S*[\W])\S*$/", $data['password']) === 0)){
 
-            if ($test){ # message bien modifié
+              $data['password']=password_hash($data['password'], PASSWORD_DEFAULT);
+              $req = $db->prepare('UPDATE users SET password = ? WHERE id = ?;');
+              $test = $req->execute(array($data['password'], $connected['data']['id']));
 
-              http_response_code(200); # Ok
+              if ($test){ # message bien modifié
 
-              echo json_encode(array(
-                "status" => true,
-                "description" => array("success"),
-                "add_on" => ("password change"),
-                "data" => $test
-              ));
+                http_response_code(200); # Ok
 
-            } else {
-              http_response_code(502); # bad gateway
+                echo json_encode(array(
+                  "status" => true,
+                  "description" => array("success"),
+                  "add_on" => ("password change"),
+                  "data" => $test
+                ));
 
-              echo json_encode(array(
-                "status" => false,
-                "description" => array("internal_error"),
-                "add_on" => ("password change"),
-                "returntosender" => $data
-              ));
+              } else {
+                http_response_code(502); # bad gateway
+
+                echo json_encode(array(
+                  "status" => false,
+                  "description" => array("internal_error"),
+                  "add_on" => ("password change"),
+                  "returntosender" => $data
+                ));
+            }
+
+          } else {
+
+            http_response_code(400); # bad request
+
+            echo json_encode(array(
+              "status" => false,
+              "description" => array("bad request"),
+              "add_on" => ("invalid password"),
+              "returntosender" => $data
+            ));
+
           }
 
         } else {
@@ -195,13 +210,24 @@ if ($method == 'PUT') {
           echo json_encode(array(
             "status" => false,
             "description" => array("bad request"),
-            "add_on" => ("invalid password"),
+            "add_on" => ("not similars passwords"),
             "returntosender" => $data
           ));
 
         }
 
-        }
+      } else if(isset($data['password']) OR isset($data['plainpassword'])){
+
+        http_response_code(400); # bad request
+
+        echo json_encode(array(
+          "status" => false,
+          "description" => array("bad request"),
+          "add_on" => ("not selected passwords"),
+          "returntosender" => $data
+        ));
+
+      }
 
         if (empty($data['name']) AND empty($data['telephone']) AND empty($data['photo']) AND empty($data['address']) AND empty($data['password'])){
 
