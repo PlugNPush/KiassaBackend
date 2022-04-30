@@ -233,7 +233,7 @@ if ($method == 'POST') {
       $req = $db->prepare('SELECT * FROM listing WHERE id = ?;');
       $req->execute(array($data['listing']));
       $object = $req->fetch(); # on récupére l'objet
-      if (!$test) {
+      if (!$object) {
         $errors[]='invalid_id_object';
       }
     }
