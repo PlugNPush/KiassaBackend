@@ -185,7 +185,7 @@ if ($method == 'PUT') {
         }
       }
 
-      if (!empty($data['name']) AND !empty($data['telephone']) AND !empty($data['photo']) AND !empty($data['address']) AND !empty($data['password'])){
+      if (empty($data['name']) AND empty($data['telephone']) AND empty($data['photo']) AND empty($data['address']) AND empty($data['password'])){
 
         http_response_code(400); # bad request
 
