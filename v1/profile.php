@@ -41,7 +41,8 @@ if ($method == 'PUT') {
 
             echo json_encode(array(
               "status" => true,
-              "description" => array("success name change"),
+              "description" => array("success"),
+              "add_on" => ("name change"),
               "data" => $test
             ));
 
@@ -50,7 +51,8 @@ if ($method == 'PUT') {
 
             echo json_encode(array(
               "status" => false,
-              "description" => array("internal_error -> name change"),
+              "description" => array("internal_error"),
+              "add_on" => ("name change"),
               "returntosender" => $data
             ));
           }
@@ -69,7 +71,8 @@ if ($method == 'PUT') {
 
             echo json_encode(array(
               "status" => true,
-              "description" => array("success telephone change"),
+              "description" => array("success"),
+              "add_on" => ("telephone change"),
               "data" => $test
             ));
 
@@ -78,7 +81,8 @@ if ($method == 'PUT') {
 
             echo json_encode(array(
               "status" => false,
-              "description" => array("internal_error -> telephone change"),
+              "description" => array("internal_error"),
+              "add_on" => ("telephone change"),
               "returntosender" => $data
             ));
           }
@@ -88,7 +92,8 @@ if ($method == 'PUT') {
 
           echo json_encode(array(
             "status" => false,
-            "description" => array("bad request -> invalid phone number"),
+            "description" => array("bad request"),
+            "add_on" => ("invalid phone number"),
             "returntosender" => $data
           ));
         }
@@ -105,7 +110,8 @@ if ($method == 'PUT') {
 
           echo json_encode(array(
             "status" => true,
-            "description" => array("success photo change"),
+            "description" => array("success"),
+            "add_on" => ("photo change"),
             "data" => $test
           ));
 
@@ -114,7 +120,8 @@ if ($method == 'PUT') {
 
           echo json_encode(array(
             "status" => false,
-            "description" => array("internal_error -> photo change"),
+            "description" => array("internal_error"),
+            "add_on" => ("photo change"),
             "returntosender" => $data
           ));
         }
@@ -131,7 +138,8 @@ if ($method == 'PUT') {
 
           echo json_encode(array(
             "status" => true,
-            "description" => array("success address change"),
+            "description" => array("success"),
+            "add_on" => ("address change"),
             "data" => $test
           ));
 
@@ -140,7 +148,8 @@ if ($method == 'PUT') {
 
           echo json_encode(array(
             "status" => false,
-            "description" => array("internal_error -> address change"),
+            "description" => array("internal_error"),
+            "add_on" => ("address change"),
             "returntosender" => $data
           ));
         }
@@ -159,7 +168,8 @@ if ($method == 'PUT') {
 
           echo json_encode(array(
             "status" => true,
-            "description" => array("success password change"),
+            "description" => array("success"),
+            "add_on" => ("password change"),
             "data" => $test
           ));
 
@@ -168,7 +178,8 @@ if ($method == 'PUT') {
 
           echo json_encode(array(
             "status" => false,
-            "description" => array("internal_error -> password change"),
+            "description" => array("internal_error"),
+            "add_on" => ("password change"),
             "returntosender" => $data
           ));
         }
@@ -180,7 +191,8 @@ if ($method == 'PUT') {
 
         echo json_encode(array(
           "status" => false,
-          "description" => array("internal_error -> no data"),
+          "description" => array("internal_error"),
+          "add_on" => ("no data"),
           "returntosender" => $data
         ));
       }
