@@ -121,7 +121,7 @@ if ($method == 'PUT') {
             "status" => true,
             "description" => array("success"),
             "add_on" => ("photo change"),
-            "data" => $test
+            "data" => $test,
             "returntosender" => $data
           ));
 
