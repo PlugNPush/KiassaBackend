@@ -147,6 +147,34 @@ if ($method == 'PUT') {
         }
       }
 
+      if (!empty($data['password']) AND !(preg_match("/^\S*(?=\S{8,})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])(?=\S*[\W])\S*$/", $data['password']) === 0)){
+
+
+        $data['password']=password_hash($data['password'], PASSWORD_DEFAULT);
+        $req = $db->prepare('UPDATE users SET password = ? WHERE id = ?;');
+        $test = $req->execute(array($data['password'], $data['id']));
+
+        if ($test){ # message bien modifié
+
+          http_response_code(200); # Ok
+
+          echo json_encode(array(
+            "status" => true,
+            "description" => array("success password change"),
+            "data" => $test
+          ));
+
+        } else {
+          http_response_code(502); # bad gateway
+
+          echo json_encode(array(
+            "status" => false,
+            "description" => array("internal_error -> password change"),
+            "returntosender" => $data
+          ));
+        }
+      }
+
       if (!empty($data['name']) AND !empty($data['telephone']) AND !empty($data['photo']) AND !empty($data['address']) AND !empty($data['password'])){
 
         http_response_code(400); # bad request
