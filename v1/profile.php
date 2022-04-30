@@ -58,7 +58,7 @@ if ($method == 'PUT') {
           }
       }
 
-      if (!empty($data['telephone'])){
+      if (isset($data['telephone'])){
 
         if(!(preg_match("/^(?:(?:\+|00)33[\s.-]{0,3}(?:\(0\)[\s.-]{0,3})?|0)[1-9](?:(?:[\s.-]?\d{2}){4}|\d{2}(?:[\s.-]?\d{3}){2})$/", $data['telephone']) === 0)){
 
@@ -101,17 +101,8 @@ if ($method == 'PUT') {
 
       if(isset($data['photo'])){
 
-        if (!empty($data['photo'])){
-
-          $req = $db->prepare('UPDATE users SET photo = ? WHERE id = ?;');
-          $test = $req->execute(array($data['photo'], $data['id']));
-
-        } else{
-
-          $req = $db->prepare('UPDATE users SET photo = ? WHERE id = ?;');
-          $test = $req->execute(array($data['photo'], $data['id']));
-
-        }
+        $req = $db->prepare('UPDATE users SET photo = ? WHERE id = ?;');
+        $test = $req->execute(array($data['photo'], $data['id']));
 
         if ($test){ # photo bien modifié
 
@@ -138,7 +129,7 @@ if ($method == 'PUT') {
       }
 
 
-      if (!empty($data['address'])){
+      if (isset($data['address'])){
 
         $req = $db->prepare('UPDATE users SET address = ? WHERE id = ?;');
         $test = $req->execute(array($data['address'], $data['id']));
