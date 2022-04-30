@@ -32,8 +32,6 @@ if ($method == 'PUT') {
 
       if (!empty($data['name'])){
 
-        if($data['name'])!=NULL){
-
           $req = $db->prepare('UPDATE users SET name = ? WHERE id = ?;');
           $test = $req->execute(array($data['name'], $data['id']));
 
@@ -56,21 +54,11 @@ if ($method == 'PUT') {
               "returntosender" => $data
             ));
           }
-        } else{
-
-          http_response_code(400); # bad request
-
-          echo json_encode(array(
-            "status" => false,
-            "description" => array("bad request -> name can't be NULL"),
-            "returntosender" => $data
-          ));
-        }
       }
 
       if (!empty($data['telephone'])){
 
-        if(!(preg_match("/^(?:(?:\+|00)33[\s.-]{0,3}(?:\(0\)[\s.-]{0,3})?|0)[1-9](?:(?:[\s.-]?\d{2}){4}|\d{2}(?:[\s.-]?\d{3}){2})$/", $data['telephone']) === 0) OR $data['telephone']==NULL){
+        if(!(preg_match("/^(?:(?:\+|00)33[\s.-]{0,3}(?:\(0\)[\s.-]{0,3})?|0)[1-9](?:(?:[\s.-]?\d{2}){4}|\d{2}(?:[\s.-]?\d{3}){2})$/", $data['telephone']) === 0){
 
           $req = $db->prepare('UPDATE users SET telephone = ? WHERE id = ?;');
           $test = $req->execute(array($data['telephone'], $data['id']));
