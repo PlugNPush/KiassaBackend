@@ -32,7 +32,7 @@ if ($method == 'PUT') {
 
       } else {
 
-        $sucess=array();
+        $success=array();
 
         if (!empty($data['name'])){
 
@@ -41,11 +41,11 @@ if ($method == 'PUT') {
 
             if ($test){ # name bien modifié
 
-              $sucess[]='200 - sucess name change';
+              $success[]='200 - success name change';
 
             } else {
 
-              $error[]='502 - internal_error name change';
+              $errors[]='502 - internal_error name change';
 
             }
         }
@@ -59,16 +59,16 @@ if ($method == 'PUT') {
 
             if ($test){ # telephone bien modifié
 
-              $sucess[]='200 - success phone change';
+              $success[]='200 - success phone change';
 
             } else {
 
-              $error[]='502 - internal_error phone change';
+              $errors[]='502 - internal_error phone change';
 
             }
           }  else{
 
-            $error[]='400 - bad request invalid phone number';
+            $errors[]='400 - bad request invalid phone number';
 
           }
         }
@@ -80,11 +80,11 @@ if ($method == 'PUT') {
 
           if ($test){ # photo bien modifié
 
-            $sucess[]='200 - success photo change';
+            $success[]='200 - success photo change';
 
           } else {
 
-            $error[]='502 - internal_error photo change';
+            $errors[]='502 - internal_error photo change';
 
           }
         }
@@ -97,11 +97,11 @@ if ($method == 'PUT') {
 
           if ($test){ # address bien modifié
 
-            $sucess[]='200 - success address change';
+            $success[]='200 - success address change';
 
           } else {
 
-            $error[]='502 - internal_error address change';
+            $errors[]='502 - internal_error address change';
 
           }
         }
@@ -117,29 +117,29 @@ if ($method == 'PUT') {
               $test = $req->execute(array($data['password'], $connected['data']['id']));
               if ($test){ # password bien modifié
 
-                $sucess[]='200 - success password change';
+                $success[]='200 - success password change';
 
               } else {
 
-                $error[]='502 - internal_error password change';
+                $errors[]='502 - internal_error password change';
 
               }
 
             } else {
 
-              $error[]='400 - bad request invalid password';
+              $errors[]='400 - bad request invalid password';
 
             }
 
           } else {
 
-            $error[]='400 - bad request no good plainpassword';
+            $errors[]='400 - bad request no good plainpassword';
 
           }
 
         } else if(isset($data['password']) OR isset($data['plainpassword'])){
 
-          $error[]='400 - bad request not selected passwords';
+          $errors[]='400 - bad request not selected passwords';
 
         }
 
@@ -155,10 +155,10 @@ if ($method == 'PUT') {
           ));
         }
 
-        if(empty($errors)){
+        if(!empty($errors)){
 
-          if(empty($sucess)){
-            $sucess[]='No Success';
+          if(empty($success)){
+            $success[]='No Success';
           }
 
           http_response_code(206);
@@ -167,7 +167,7 @@ if ($method == 'PUT') {
             "status" =>false,
             "description" => array("partial_content"),
             "errors" => $errors,
-            "success" => $sucess,
+            "success" => $success,
             "returntosender" => $data
           ));
 
@@ -178,7 +178,7 @@ if ($method == 'PUT') {
           echo json_encode(array(
             "status" => true,
             "description" => array("success"),
-            "success" => $sucess,
+            "success" => $success,
             "data" => $test
           ));
 
