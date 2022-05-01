@@ -103,7 +103,7 @@ if ($method == 'POST') {
     ));
   }
 
-} elseif ($method == 'PATCH') {
+} else if ($method == 'PATCH') {
 
   if ($connected['status'] == true){
 
@@ -154,7 +154,7 @@ if ($method == 'POST') {
     ));
   }
 
-} elseif ($method == 'DELETE') {
+} else if ($method == 'DELETE') {
 
   if ($connected['status'] == true){
 
@@ -220,7 +220,7 @@ if ($method == 'POST') {
     ));
   }
 
-} elseif ($method == 'PUT') {
+} else if ($method == 'PUT') {
   if ($connected['status'] == true){
 
     // Return alert
@@ -235,6 +235,8 @@ if ($method == 'POST') {
       $object = $req->fetch(); # on récupére l'objet
       if (!$object) {
         $errors[]='invalid_id_object';
+      } else if ($object['seller'] != $connected['data']['id']) {
+        $errors[]='unauthorized';
       }
     }
     if (empty($data['status'])){
@@ -242,6 +244,42 @@ if ($method == 'POST') {
     }
     if ($data['status'] != 0 && $data['status'] != 1) { #$data['status'] = 1 si en vente ou 0 si privé (bouton)
       $errors[]='invalid_status';
+    }
+
+    if (empty($data['name'])){
+      $data['name']=$object['name'];
+    }
+    if (empty($data['address'])){
+      $data['address']=$object['address'];
+    }
+    # test si les données sont valides
+    if (empty($data['price'])){
+      $data['price']=$object['price'];
+    } else {
+      $floatVal = floatval($data['price']); // Try to convert the string to a float
+      if(!$floatVal || $floatVal<0)
+      {
+          $errors[]='invalid_price';
+      }
+    }
+
+    if (!empty($data['photo'])){
+      if(!filter_var($data['photo'], FILTER_VALIDATE_URL)){
+        $errors[]='invalid_photo_url';
+      }
+    } else {
+      $data['photo']=$object['photo'];
+    }
+
+    if (!empty($data['category'])){
+      $req = $db->prepare('SELECT * FROM category WHERE id = ?;');
+      $req->execute(array($data['category']));
+      $test = $req->fetch();
+      if (!$test){ # fake category
+        $errors[]='invalid_category';
+      }
+    } else {
+      $data['category']=$object['category'];
     }
 
     if (!empty($errors)){
@@ -254,62 +292,6 @@ if ($method == 'POST') {
       ));
 
     } else {
-
-      $success=array();
-
-      if (empty($data['name'])){
-        $errors[]='missing_name';
-        $data['name']=$object['name'];
-      } elseif ($data['name']!=$object['name']) {
-        $success[]='name_change';
-      }
-      if (empty($data['address'])){
-        $errors[]='missing_address';
-        $data['address']=$object['address'];
-      } elseif ($data['address']!=$object['address']) {
-        $success[]='address_change';
-      }
-      # test si les données sont valides
-      $floatVal = floatval($data['price']); // Try to convert the string to a float
-      if(!$floatVal || $floatVal<0)
-      {
-          $errors[]='invalid_price';
-          $data['price']=$object['price'];
-      } elseif ($data['price']!=$object['price']) {
-        $success[]='price_change';
-      }
-
-      if (!empty($data['photo'])){
-        if(!filter_var($data['photo'], FILTER_VALIDATE_URL)){
-          $errors[]='invalid_photo_url';
-          if (!empty($object['photo'])){
-            $data['photo']=$object['photo'];
-          }
-        }
-      }
-      if (isset($data['photo']) && $data['photo']!=$object['photo']) {
-        $success[]='photo_change';
-      }
-
-      if (isset($data['status']) && $data['status']!=$object['status']) {
-        $success[]='status_change';
-      }
-
-      if (!empty($data['category'])){
-        $req = $db->prepare('SELECT * FROM category WHERE id = ?;');
-        $req->execute(array($data['category']));
-        $test = $req->fetch();
-        if (!$test){ # fake category
-          $errors[]='invalid_category';
-          if (!empty($object['category'])){
-            $data['category']=$object['category'];
-          }
-        }
-      }
-      if (isset($data['category']) && $data['category']!=$object['category']) {
-        $success[]='category_change';
-      }
-
 
       $req=$db->prepare('UPDATE listing SET name=:name, address=:address, price=:price, description=:description, status=:status, photo=:photo, category=:category WHERE id=:id;');
       $test=$req->execute(array(
@@ -329,8 +311,7 @@ if ($method == 'POST') {
 
         echo json_encode(array(
           "status" => true,
-          "description" => array("success"=>$success,"errors"=>$errors),
-          "data" => $data
+          "description" => array("success")
         ));
       } else {
         http_response_code(502); # bad gateway
@@ -338,8 +319,7 @@ if ($method == 'POST') {
         echo json_encode(array(
           "status" => false,
           "description" => array("internal_error"),
-          "returntosender" => $data,
-          "update" => array("success"=>$success,"errors"=>$errors)
+          "returntosender" => $data
         ));
       }
     }
