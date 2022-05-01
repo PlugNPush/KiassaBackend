@@ -237,6 +237,9 @@ if ($method == 'POST') {
         $errors[]='invalid_id_object';
       }
     }
+    if (empty($data['status'])){
+      $data['status']=$object['status'];
+    }
     if ($data['status'] != 0 && $data['status'] != 1) { #$data['status'] = 1 si en vente ou 0 si privé (bouton)
       $errors[]='invalid_status';
     }
@@ -336,8 +339,7 @@ if ($method == 'POST') {
           "status" => false,
           "description" => array("internal_error"),
           "returntosender" => $data,
-          "update" => array("success"=>$success,"errors"=>$errors),
-          "status" => array($data['status'])
+          "update" => array("success"=>$success,"errors"=>$errors)
         ));
       }
     }
