@@ -320,7 +320,7 @@ if ($method == 'POST') {
         "id" => $data['listing']
       ));
 
-      if ($test==true && $req->rowCount()==1)
+      if ($test==true)
       {
         http_response_code(200); # ok
 
