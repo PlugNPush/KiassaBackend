@@ -145,7 +145,7 @@ if ($method == 'PUT') {
 
         }
 
-        if (empty($data['name']) AND empty($data['telephone']) AND empty($data['photo']) AND empty($data['address']) AND empty($data['password'])){
+        if (!isset($data['name']) AND !isset($data['telephone']) AND !isset($data['photo']) AND !isset($data['address']) AND !isset($data['password'])){
 
           http_response_code(400); # bad request
 
@@ -166,7 +166,7 @@ if ($method == 'PUT') {
           http_response_code(206);
 
           echo json_encode(array(
-            "status" =>false,
+            "status" =>true,
             "description" => array("partial_content"),
             "errors" => $errors,
             "success" => $success,
