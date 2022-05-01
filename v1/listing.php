@@ -308,9 +308,15 @@ if ($method == 'POST') {
       }
 
 
-      $req=$db->prepare('UPDATE listing SET name=:name WHERE id=:id;');
+      $req=$db->prepare('UPDATE listing SET name=:name, address=:address, price=:price, description=:description, status=:status, photo=:photo, category=:category WHERE id=:id;');
       $test=$req->execute(array(
         "name" => $data['name'],
+        "address" => $data['address'],
+        "price" => $data['price'],
+        "description" => $data['description'], # non obligatoire
+        "status" => $data['status'], # 0 ou 1
+        "photo" => $data['photo'], # non obligatoire
+        "category" => $data['category'], # non obligatoire
         "id" => $data['listing']
       ));
 
