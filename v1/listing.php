@@ -238,7 +238,7 @@ if ($method == 'POST') {
       }
     }
     if (empty($data['status'])){
-      $data['status']=$object['status']
+      $data['status']=$object['status'];
     }
     if ($data['status'] != 0 && $data['status'] != 1) { #$data['status'] = 1 si en vente ou 0 si privé (bouton)
       $errors[]='invalid_status';
