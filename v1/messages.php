@@ -37,7 +37,7 @@ if ($method == 'GET') {
     ));
   }
 
-} else if ($method == 'PATCH') {
+} else if ($method == 'GET') {
   if ($connected['status'] == true) {
     $errors=array();
     if (empty($data['receiver'])){
@@ -271,7 +271,7 @@ if ($method == 'GET') {
   }
 
 
-} else if ($method == 'PUT') {
+} else if ($method == 'PATCH') {
   # Modifier un message
 
   if ($connected['status'] == true) {

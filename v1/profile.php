@@ -2,7 +2,7 @@
 
 require_once '../config/core.php';
 
-if ($method == 'PUT') {
+if ($method == 'PATCH') {
   # Modifier les données
 
   if ($connected['status'] == true){

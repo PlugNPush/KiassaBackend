@@ -103,7 +103,7 @@ if ($method == 'POST') {
     ));
   }
 
-} else if ($method == 'PATCH') {
+} else if ($method == 'GET') {
 
   if ($connected['status'] == true){
 
@@ -220,7 +220,7 @@ if ($method == 'POST') {
     ));
   }
 
-} else if ($method == 'PUT') {
+} else if ($method == 'PATCH') {
   if ($connected['status'] == true){
 
     // Return alert
