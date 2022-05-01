@@ -4,6 +4,8 @@
 
 require_once '../config/core.php';
 
+$data['listing'] = $_GET['id'];
+
 if ($method == 'POST') {
   if ($connected['status'] == true){
 

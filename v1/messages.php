@@ -2,6 +2,8 @@
 
 require_once '../config/core.php';
 
+$data['receiver'] = $_GET['id'];
+
 if ($method == 'GET') {
   if ($connected['status'] == true) {
     # lister les conversations
