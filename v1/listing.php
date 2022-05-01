@@ -337,7 +337,7 @@ if ($method == 'POST') {
           "description" => array("internal_error"),
           "returntosender" => $data,
           "update" => array("success"=>$success,"errors"=>$errors),
-          "status" => $data['status']
+          "status" => array($data['status'])
         ));
       }
     }
