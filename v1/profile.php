@@ -26,6 +26,10 @@ if ($method == 'PATCH') {
       }
     }
 
+    if (!isset($data['address'])){
+      $data['address']=$connected['data']['address'];
+    }
+
     if (isset($data['password']) AND isset($data['plainpassword'])){
       $verify = password_verify($data['plainpassword'], $connected['data']['password']);
       if($verify){
