@@ -27,7 +27,7 @@ if ($method == 'PATCH') {
     }
 
     if (empty($data['address'])){
-      $data['address']=$object['address'];
+      $data['address']=$connected['data']['address'];
     }
 
     if (isset($data['password']) AND isset($data['plainpassword'])){
