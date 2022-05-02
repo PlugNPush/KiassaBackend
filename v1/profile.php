@@ -14,17 +14,13 @@ if ($method == 'PATCH') {
       $data['name']=$connected['data']['name'];
     }
 
-    if (empty($data['telephone'])){
-      $data['telephone']=$connected['data']['telephone'];
-    } else {
+    if (!empty($data['telephone'])){
       if(preg_match("/^(?:(?:\+|00)33[\s.-]{0,3}(?:\(0\)[\s.-]{0,3})?|0)[1-9](?:(?:[\s.-]?\d{2}){4}|\d{2}(?:[\s.-]?\d{3}){2})$/", $data['telephone']) === 0){
         $errors[]='invalid_telephone';
       }
     }
 
-    if (empty($data['photo'])){
-      $data['photo']=$connected['data']['photo'];
-    } else {
+    if (!empty($data['photo'])){
       if(!filter_var($data['photo'], FILTER_VALIDATE_URL)){
         $errors[]='invalid_photo_url';
       }
