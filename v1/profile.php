@@ -17,7 +17,7 @@ if ($method == 'PATCH') {
     if (empty($data['telephone'])){
       $data['telephone']=$connected['data']['telephone'];
     } else {
-      if(!(preg_match("/^(?:(?:\+|00)33[\s.-]{0,3}(?:\(0\)[\s.-]{0,3})?|0)[1-9](?:(?:[\s.-]?\d{2}){4}|\d{2}(?:[\s.-]?\d{3}){2})$/", $data['telephone']) === 0)){
+      if(preg_match("/^(?:(?:\+|00)33[\s.-]{0,3}(?:\(0\)[\s.-]{0,3})?|0)[1-9](?:(?:[\s.-]?\d{2}){4}|\d{2}(?:[\s.-]?\d{3}){2})$/", $data['telephone']) === 0){
         $errors[]='invalid_telephone';
       }
     }
@@ -34,6 +34,21 @@ if ($method == 'PATCH') {
       $data['address']=$object['address'];
     }
 
+    if (isset($data['password']) AND isset($data['plainpassword'])){
+      $verify = password_verify($data['plainpassword'], $connected['data']['password']);
+      if($verify){
+        if(!(preg_match("/^\S*(?=\S{8,})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])(?=\S*[\W])\S*$/", $data['password']) === 0)){
+          $data['password']=password_hash($data['password'], PASSWORD_DEFAULT); # mdp ok
+        } else {
+          $errors[]='invalid_password';
+        }
+      } else {
+        $errors[]='invalid_plainpassword';
+      }
+    } else if(isset($data['password']) OR isset($data['plainpassword'])){
+      $errors[]='not_selected_passwords';
+    }
+
 
     if (!empty($errors)){
       http_response_code(400); # bad request
@@ -46,84 +61,25 @@ if ($method == 'PATCH') {
 
       } else {
 
-        if (isset($data['password']) AND isset($data['plainpassword'])){
+        $req = $db->prepare('UPDATE users SET name=?, telephone=?, photo=?, address=?, password=? WHERE id=?;');
+        $test = $req->execute(array($data['name'], $data['telephone'], $data['photo'], $data['address'], $data['password'], $connected['data']['id']));
 
-          $verify = password_verify($data['plainpassword'], $connected['data']['password']);
-
-          if($verify){
-
-            if(!(preg_match("/^\S*(?=\S{8,})(?=\S*[a-z])(?=\S*[A-Z])(?=\S*[\d])(?=\S*[\W])\S*$/", $data['password']) === 0)){
-
-              $data['password']=password_hash($data['password'], PASSWORD_DEFAULT);
-              $req = $db->prepare('UPDATE users SET password = ? WHERE id = ?;');
-              $test = $req->execute(array($data['password'], $connected['data']['id']));
-              if ($test){ # password bien modifié
-
-                $success[]='200 - success password change';
-
-              } else {
-
-                $errors[]='502 - internal_error password change';
-
-              }
-
-            } else {
-
-              $errors[]='400 - bad request invalid password';
-
-            }
-
-          } else {
-
-            $errors[]='400 - bad request no good plainpassword';
-
-          }
-
-        } else if(isset($data['password']) OR isset($data['plainpassword'])){
-
-          $errors[]='400 - bad request not selected passwords';
-
-        }
-
-        if (!isset($data['name']) AND !isset($data['telephone']) AND !isset($data['photo']) AND !isset($data['address']) AND !isset($data['password'])){
-
-          http_response_code(400); # bad request
-
-          echo json_encode(array(
-            "status" => false,
-            "description" => array("bad request"),
-            "add_on" => ("no data"),
-            "returntosender" => $data
-          ));
-        }
-
-        if(!empty($errors)){
-
-          if(empty($success)){
-            $success[]='No Success';
-          }
-
-          http_response_code(206);
-
-          echo json_encode(array(
-            "status" =>true,
-            "description" => array("partial_content"),
-            "errors" => $errors,
-            "success" => $success,
-            "returntosender" => $data
-          ));
-
-        } else {
-
+        if($test==true && $req->rowCount()==1) {
           http_response_code(200); # Ok
 
           echo json_encode(array(
             "status" => true,
             "description" => array("success"),
-            "success" => $success,
             "data" => $test
           ));
+        } else {
+          http_response_code(502); # bad gateway
 
+          echo json_encode(array(
+            "status" => false,
+            "description" => array("internal_error"),
+            "returntosender" => $data
+          ));
         }
     }
 
