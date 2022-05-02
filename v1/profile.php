@@ -74,7 +74,8 @@ if ($method == 'PATCH') {
           echo json_encode(array(
             "status" => false,
             "description" => array("internal_error"),
-            "returntosender" => $data
+            "returntosender" => $data,
+            "test" => $connected['data']
           ));
         }
     }
