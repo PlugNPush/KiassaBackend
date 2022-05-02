@@ -11,7 +11,7 @@ if ($method == 'PATCH') {
     $errors=array();
 
     if (empty($data['name'])){
-      $data['name']=$connected['data']['name'];
+      $errors[]='invalid_name';
     }
 
     if (!empty($data['telephone'])){
