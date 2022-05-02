@@ -9,17 +9,31 @@ if ($method == 'PATCH') {
 
     # test si l'id est valide
     $errors=array();
-    if (empty($connected['data']['id'])){
-      $errors[]='missing_id';
-    } else {
-      $req = $db->prepare('SELECT * FROM users WHERE id = ?;');
-      $req->execute(array($connected['data']['id']));
-      $test = $req->fetch();
 
-      if (!$test) {
-        $errors[]='invalid_id';
+    if (empty($data['name'])){
+      $data['name']=$connected['data']['name'];
+    }
+
+    if (empty($data['telephone'])){
+      $data['telephone']=$connected['data']['telephone'];
+    } else {
+      if(!(preg_match("/^(?:(?:\+|00)33[\s.-]{0,3}(?:\(0\)[\s.-]{0,3})?|0)[1-9](?:(?:[\s.-]?\d{2}){4}|\d{2}(?:[\s.-]?\d{3}){2})$/", $data['telephone']) === 0)){
+        $errors[]='invalid_telephone';
       }
     }
+
+    if (empty($data['photo'])){
+      $data['photo']=$connected['data']['photo'];
+    } else {
+      if(!filter_var($data['photo'], FILTER_VALIDATE_URL)){
+        $errors[]='invalid_photo_url';
+      }
+    }
+
+    if (empty($data['address'])){
+      $data['address']=$object['address'];
+    }
+
 
     if (!empty($errors)){
       http_response_code(400); # bad request
@@ -31,80 +45,6 @@ if ($method == 'PATCH') {
       ));
 
       } else {
-
-        $success=array();
-
-        if (!empty($data['name'])){
-
-            $req = $db->prepare('UPDATE users SET name = ? WHERE id = ?;');
-            $test = $req->execute(array($data['name'], $connected['data']['id']));
-
-            if ($test){ # name bien modifié
-
-              $success[]='200 - success name change';
-
-            } else {
-
-              $errors[]='502 - internal_error name change';
-
-            }
-        }
-
-        if (isset($data['telephone'])){
-
-          if(!(preg_match("/^(?:(?:\+|00)33[\s.-]{0,3}(?:\(0\)[\s.-]{0,3})?|0)[1-9](?:(?:[\s.-]?\d{2}){4}|\d{2}(?:[\s.-]?\d{3}){2})$/", $data['telephone']) === 0) OR empty($data['telephone'])){
-
-            $req = $db->prepare('UPDATE users SET telephone = ? WHERE id = ?;');
-            $test = $req->execute(array($data['telephone'], $connected['data']['id']));
-
-            if ($test){ # telephone bien modifié
-
-              $success[]='200 - success phone change';
-
-            } else {
-
-              $errors[]='502 - internal_error phone change';
-
-            }
-          }  else{
-
-            $errors[]='400 - bad request invalid phone number';
-
-          }
-        }
-
-        if(isset($data['photo'])){
-
-          $req = $db->prepare('UPDATE users SET photo = ? WHERE id = ?;');
-          $test = $req->execute(array($data['photo'], $connected['data']['id']));
-
-          if ($test){ # photo bien modifié
-
-            $success[]='200 - success photo change';
-
-          } else {
-
-            $errors[]='502 - internal_error photo change';
-
-          }
-        }
-
-
-        if (isset($data['address'])){
-
-          $req = $db->prepare('UPDATE users SET address = ? WHERE id = ?;');
-          $test = $req->execute(array($data['address'], $connected['data']['id']));
-
-          if ($test){ # address bien modifié
-
-            $success[]='200 - success address change';
-
-          } else {
-
-            $errors[]='502 - internal_error address change';
-
-          }
-        }
 
         if (isset($data['password']) AND isset($data['plainpassword'])){
 
