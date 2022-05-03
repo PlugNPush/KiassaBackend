@@ -248,14 +248,18 @@ if ($method == 'POST') {
       $errors[]='invalid_status';
     }
 
-    if (empty($data['name'])){
+    if (!isset($data['name'])){
       $data['name']=$object['name'];
+    } else if (empty($data['name'])){
+      $errors[]='invalid_name';
     }
-    if (empty($data['address'])){
+
+    if (!isset($data['address'])){
       $data['address']=$object['address'];
     }
+
     # test si les données sont valides
-    if (empty($data['price'])){
+    if (!isset($data['price'])){
       $data['price']=$object['price'];
     } else {
       $floatVal = floatval($data['price']); // Try to convert the string to a float
@@ -265,24 +269,25 @@ if ($method == 'POST') {
       }
     }
 
-    if (!empty($data['photo'])){
+    if (!isset($data['photo'])){
+      $data['photo']=$object['photo'];
+    } else if (!empty($data['photo'])){
       if(!filter_var($data['photo'], FILTER_VALIDATE_URL)){
         $errors[]='invalid_photo_url';
       }
-    } else {
-      $data['photo']=$object['photo'];
     }
 
-    if (!empty($data['category'])){
+    if (!isset($data['category'])){
+      $data['category']=$object['category'];
+    } else if (!empty($data['category'])){
       $req = $db->prepare('SELECT * FROM category WHERE id = ?;');
       $req->execute(array($data['category']));
       $test = $req->fetch();
       if (!$test){ # fake category
         $errors[]='invalid_category';
       }
-    } else {
-      $data['category']=$object['category'];
     }
+    
 
     if (!empty($errors)){
       http_response_code(400); # bad request

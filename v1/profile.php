@@ -101,6 +101,57 @@ if ($method == 'PATCH') {
 
   }
 
+} else if ($method == 'GET') {
+
+  if ($connected['status'] == true){
+
+    // Return alert
+
+    # test si les données sont vides
+    $errors=array();
+    if (empty($data['profile'])){
+      $errors[]='missing_profile';
+    } else { # test si les données sont valides
+      # on vérifie si l'utilisateur existe dans la db (id unique)
+      $id_fetch = $db->prepare('SELECT * FROM users WHERE id = ?;');
+      $id_fetch->execute(array($data['profile']));
+      $user = $id_fetch->fetch();
+      if (!$user){
+        $errors[]='invalid_profile';
+      }
+    }
+
+    if (!empty($errors)){
+      http_response_code(400); # bad request
+
+      echo json_encode(array(
+        "status" => false,
+        "description" => $errors,
+        "returntosender" => $data
+      ));
+
+    } else {
+
+      # $user
+      http_response_code(200); # ok
+
+      echo json_encode(array(
+        "status" => true,
+        "description" => array("success"),
+        "data" => $user
+      ));
+    }
+  } else {
+    http_response_code(403); # forbiden
+
+    echo json_encode(array(
+      "status" => false,
+      "description" => array("invalid_token"),
+      "returntosender" => $data,
+      "returnheaders" => $headers
+    ));
+  }
+
 } else {
 
   // Unknown method
