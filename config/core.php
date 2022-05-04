@@ -12,13 +12,27 @@ use PHPMailer\PHPMailer\SMTP;
 // Headers
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
-header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Access-Token, username, password");
+header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Access-Token, email, plainpassword, token");
 header("Content-Type: application/json; charset=utf-8");
 
 // Read data from request
 $method = $_SERVER["REQUEST_METHOD"];
 $data = json_decode(file_get_contents('php://input'), true);
 $headers = getallheaders();
+
+if ($method == "OPTIONS") {
+  // Preflight CORS Request
+  // DENY THE CORS PROTOCOL, RETURN 200 OK AND LEAVE
+  http_response_code(200); # OK
+
+  echo json_encode(array(
+    "status" => false,
+    "description" => array("refusing_preflight"),
+    "returnmethod" => $method,
+    "returntosender" => $data
+  ));
+  exit();
+}
 
 // Connect to databases
 try {
