@@ -2,7 +2,10 @@
 
 require_once '../config/core.php';
 
-$data['receiver'] = $_GET['id'];
+if (!empty($_GET['id'])) {
+  $data['receiver'] = $_GET['id'];
+}
+
 
 if ($method == 'GET') {
   if ($connected['status'] == true) {
