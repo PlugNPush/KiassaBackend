@@ -4,7 +4,10 @@
 
 require_once '../config/core.php';
 
-$data['listing'] = $_GET['id'];
+if (!empty($_GET['id'])) {
+  $data['listing'] = $_GET['id'];
+}
+
 
 if ($method == 'POST') {
   if ($connected['status'] == true){
@@ -287,7 +290,7 @@ if ($method == 'POST') {
         $errors[]='invalid_category';
       }
     }
-    
+
 
     if (!empty($errors)){
       http_response_code(400); # bad request
